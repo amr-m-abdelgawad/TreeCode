@@ -102,12 +102,28 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/binaries/${CMAKE_BUILD_TYPE})
 # LIBRARY_OUTPUT_DIRECTORY: Directory for shared library files (.dll, .so).
 # RUNTIME_OUTPUT_DIRECTORY: Directory for executable files (.exe, .out).
 # OUTPUT_NAME: The base name for the output files, set to the project name.
-set_target_properties(${CMAKE_PROJECT_NAME}Lib PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    OUTPUT_NAME "${CMAKE_PROJECT_NAME}"
-)
+if(MSVC)
+    set_target_properties(${CMAKE_PROJECT_NAME}Lib PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries/lib"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries/lib"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries/bin"
+        OUTPUT_NAME "${CMAKE_PROJECT_NAME}"
+    )
+    foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
+        string(TOUPPER ${OUTPUTCONFIG} UPPERCASE_CONFIG)
+        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${UPPERCASE_CONFIG} ${CMAKE_BINARY_DIR}/lib)
+        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${UPPERCASE_CONFIG} ${CMAKE_BINARY_DIR}/lib)
+        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${UPPERCASE_CONFIG} ${CMAKE_BINARY_DIR}/bin)
+    endforeach()
+else()
+    set_target_properties(${CMAKE_PROJECT_NAME}Lib PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+        OUTPUT_NAME "${CMAKE_PROJECT_NAME}"
+    )
+endif()
+
 
 # Install the library target of the project.
 # - ARCHIVE: Specifies the destination directory for archive files (e.g., static libraries).
