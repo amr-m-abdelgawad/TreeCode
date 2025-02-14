@@ -1,6 +1,7 @@
 # TreeCode Project
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+![MIT License](https://img.shields.io/github/license/amr-m-abdelgawad/TreeCode)
+![Build Status](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/CMake-Build.yml/badge.svg)
 
 ## Overview
 TreeCode is a C++ library for managing hierarchical data structures. It includes classes for containers, elements, groups, templates, and logging. The library can be built as a shared library and includes options for building tests and examples.
