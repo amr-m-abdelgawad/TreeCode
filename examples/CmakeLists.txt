@@ -34,6 +34,10 @@ add_executable(DID_Lists
     DID_Lists/main.cpp
 )
 
+# Adds a dependency for the target 'DID_Lists' on the library target '${CMAKE_PROJECT_NAME}Lib'.
+# This ensures that '${CMAKE_PROJECT_NAME}Lib' is built before 'DID_Lists'.
+add_dependencies(DID_Lists ${CMAKE_PROJECT_NAME}Lib)
+
 # Links the target DID_Lists with the private library ${CMAKE_PROJECT_NAME}Lib.
 # This means that ${CMAKE_PROJECT_NAME}Lib will be used only for DID_Lists and
 # will not be exposed to other targets that link with DID_Lists.
