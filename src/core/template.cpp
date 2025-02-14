@@ -40,7 +40,7 @@
 /**
  * @brief Include necessary headers
  */
-#include "Includes/template.hpp"
+#include "includes/template.hpp"
 
 namespace TreeCode {
     /**

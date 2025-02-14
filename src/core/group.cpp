@@ -40,7 +40,7 @@
 /**
  * @brief Include necessary headers
 */
-#include "Includes/group.hpp"
+#include "includes/group.hpp"
 
 namespace TreeCode {
     /**
