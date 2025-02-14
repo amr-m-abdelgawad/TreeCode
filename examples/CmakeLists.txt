@@ -49,6 +49,7 @@ target_link_libraries(DID_Lists PRIVATE ${CMAKE_PROJECT_NAME}Lib)
 #   directory, build type, and 'bin' directory.
 # - OUTPUT_NAME: Defines the name of the output executable as 'DID_Lists'.
 if(MSVC)
+    set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/binaries/${CMAKE_BUILD_TYPE})
     set_target_properties(DID_Lists PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
         OUTPUT_NAME "DID_Lists"
