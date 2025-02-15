@@ -1,6 +1,7 @@
 # TreeCode Project
 
 ![MIT License](https://img.shields.io/github/license/amr-m-abdelgawad/TreeCode)
+
 ![Build Status](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/CMake-Build.yml/badge.svg)
 
 ## Overview
