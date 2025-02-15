@@ -44,7 +44,7 @@
  */
 #include "element.hpp"
 
-namespace TreeCode {
+namespace treecode {
     /**
      * @class container
      * @brief Represents a container for storing elements in a key-value format.
@@ -109,6 +109,6 @@ namespace TreeCode {
          */
         std::vector<std::string> __keys;
     };
-} // namespace TreeCode
+} // namespace treecode
 
 #endif // CONTAINER_H

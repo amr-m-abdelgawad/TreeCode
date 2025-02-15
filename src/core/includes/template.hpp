@@ -44,7 +44,7 @@
  */
 #include "group.hpp"
 
-namespace TreeCode {
+namespace treecode {
     /**
      * @brief The groupTemplate class represents a predefined structure of the tree.
      * 
@@ -121,6 +121,6 @@ namespace TreeCode {
             std::shared_ptr<group> groupIns
         ) const;
     };
-} // namespace TreeCode
+} // namespace treecode
 
 #endif // TEMPLATE_H

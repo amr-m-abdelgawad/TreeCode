@@ -41,7 +41,7 @@
 */
 #include "includes/element.hpp"
 
-namespace TreeCode {
+namespace treecode {
     /**
      * @brief Default constructor for the element class.
      * Initializes the element with default values.
@@ -49,7 +49,7 @@ namespace TreeCode {
     element::element() :
         __label("NOT_SET"), 
         __description("NOT_SET"), 
-        __type(Type::UNKNOWN), 
+        __type(type::UNKNOWN), 
         __isValueSet(false) {}
 
 
@@ -64,20 +64,20 @@ namespace TreeCode {
     element::element(
         const std::string& label, 
         const std::string& description, 
-        const Type::data_t& type
+        const type::data_t& type
     ) :
         __label(label), 
         __description(description), 
         __type(type) {
         /* Throw an exception if the type is unknown */
-        if(type >= Type::UNKNOWN) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_INVALID_TYPE);
+        if(type >= type::UNKNOWN) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_INVALID_TYPE);
         switch (type) {
             /* set the default value based on the type */
-            case Type::BOOLEAN:
+            case type::BOOLEAN:
                 this->__value = "false";
                 this->__isValueSet = true;
                 break;
-            case Type::MULTIVALUES:
+            case type::MULTIVALUES:
                 /* throw an exception if the type is multivalues */
                 Exception::Throw::Invalid(this->__label, Exception::ELEMENT_WRONG_TYPE_FOR_MULTIVALUES);
                 break;
@@ -102,7 +102,7 @@ namespace TreeCode {
     element::element(
         const std::string& label, 
         const std::string& description, 
-        const Type::data_t& type, 
+        const type::data_t& type, 
         const std::string& defaultValue
     ) :
         element(label, description, type) {
@@ -126,7 +126,7 @@ namespace TreeCode {
     element::element(
         const std::string& label, 
         const std::string& description, 
-        const Type::data_t& type, 
+        const type::data_t& type, 
         const bool& required
     ) :
         element(label, description, type) { this->__required = required; }
@@ -144,7 +144,7 @@ namespace TreeCode {
     element::element(
         const std::string& label, 
         const std::string& description, 
-        const Type::data_t& type, 
+        const type::data_t& type, 
         const std::string& defaultValue, 
         const bool& required
     ) :
@@ -163,7 +163,7 @@ namespace TreeCode {
     element::element(
         const std::string& label, 
         const std::string& description, 
-        const Type::data_t& type, 
+        const type::data_t& type, 
         const std::vector<std::string>& allowedValues
     ) :
         __label(label), 
@@ -171,9 +171,9 @@ namespace TreeCode {
         __type(type), 
         __allowedValues(allowedValues) {
         /* Throw an exception if the type is unknown */
-        if(type >= Type::UNKNOWN) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_TYPE_UNKNOWN);
+        if(type >= type::UNKNOWN) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_TYPE_UNKNOWN);
         /* Throw an exception if the type is not multivalues */
-        if(type != Type::MULTIVALUES) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_WRONG_TYPE_FOR_MULTIVALUES);
+        if(type != type::MULTIVALUES) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_WRONG_TYPE_FOR_MULTIVALUES);
         if (!allowedValues.empty()) {
             /* Set the default value to the first allowed value */
             this->__value = allowedValues[0];
@@ -191,7 +191,7 @@ namespace TreeCode {
     void element::setValue(
         const std::string& newValue
     ) {
-        if (this->__type == Type::MULTIVALUES) {
+        if (this->__type == type::MULTIVALUES) {
             /* check if value is in the allowed values list */
             if (std::find(this->__allowedValues.begin(), this->__allowedValues.end(), newValue) != this->__allowedValues.end()) {
                 /* set the value and the value set flag */
@@ -203,7 +203,7 @@ namespace TreeCode {
             else Exception::Throw::Invalid(this->__label, Exception::ELEMENT_VALUE_NOT_ALLOWED);
         }
         /* throw an exception if the element type is unknown */
-        else if (this->__type >= Type::UNKNOWN) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_TYPE_UNKNOWN);
+        else if (this->__type >= type::UNKNOWN) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_TYPE_UNKNOWN);
         /* set the value for other types */
         else {
             /* check if value is empty*/
@@ -230,7 +230,7 @@ namespace TreeCode {
      */
     std::vector<std::string> element::getAllowedValues() const {
         /* throw an exception if the element type is not multivalues */
-        if(this->__type != Type::MULTIVALUES) {
+        if(this->__type != type::MULTIVALUES) {
             Exception::Throw::Invalid(this->__label, Exception::ELEMENT_MULTIVALUES_ALLOWED_MISSING);
             return {}; // Return an empty vector to satisfy the return type
         }
@@ -257,7 +257,7 @@ namespace TreeCode {
      * @brief Gets the type of the element.
      * @return The type of the element.
      */
-    Type::data_t element::getType() const { return this->__type; }
+    type::data_t element::getType() const { return this->__type; }
 
 
     /**
@@ -272,4 +272,4 @@ namespace TreeCode {
      * @return True if the value is set, false otherwise.
      */
     bool element::isValueSet() const { return this->__isValueSet; }
-} // namespace TreeCode
+} // namespace treecode

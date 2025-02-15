@@ -25,6 +25,11 @@
 #
 # ==============================================================================
 
+# Set the binary directory based on the source directory and build type.
+# This will place the binaries in a subdirectory named 'binaries' within the source directory,
+# with a further subdirectory for the specific build type (e.g., Debug, Release).
+set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/binaries/${CMAKE_BUILD_TYPE})
+
 # ==============================================================================
 # 1. Example: DID_Lists
 # ==============================================================================
@@ -48,23 +53,9 @@ target_link_libraries(DID_Lists PRIVATE ${CMAKE_PROJECT_NAME}Lib)
 #   executable will be placed. It is set to a path that includes the source 
 #   directory, build type, and 'bin' directory.
 # - OUTPUT_NAME: Defines the name of the output executable as 'DID_Lists'.
-if(MSVC)
-    set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/binaries/${CMAKE_BUILD_TYPE})
-    set_target_properties(DID_Lists PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-        OUTPUT_NAME "DID_Lists"
-    )
-    foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-        string(TOUPPER ${OUTPUTCONFIG} UPPERCASE_CONFIG)
-        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${UPPERCASE_CONFIG} ${CMAKE_BINARY_DIR}/lib)
-        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${UPPERCASE_CONFIG} ${CMAKE_BINARY_DIR}/lib)
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${UPPERCASE_CONFIG} ${CMAKE_BINARY_DIR}/bin)
-    endforeach()
-else()
-    set_target_properties(DID_Lists PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-        OUTPUT_NAME "DID_Lists"
-    )
-endif()
 
+set_target_properties(DID_Lists PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    OUTPUT_NAME "DID_Lists"
+)
 # ==============================================================================

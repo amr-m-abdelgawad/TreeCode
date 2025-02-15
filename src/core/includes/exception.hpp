@@ -43,7 +43,7 @@
  */
 #include "common.hpp"
 
-namespace TreeCode {
+namespace treecode {
     /**
      * @namespace Exception
      * @brief Contains exception messages used throughout the library.
@@ -174,6 +174,6 @@ namespace TreeCode {
             };
         }; // struct Throw
     } // namespace Exception
-} // namespace TreeCode
+} // namespace treecode
 
 #endif // EXCEPTION_H

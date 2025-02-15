@@ -81,11 +81,11 @@ option(BUILD_EXAMPLES "Build examples" ON)
 
 # Recursively collects all .cpp source files located in the src/core directory
 # and stores their paths in the LIB_SOURCES variable.
-file(GLOB_RECURSE LIB_SOURCES "src/core/*.cpp")
+file(GLOB_RECURSE LIB_SOURCES "src/core/*.cpp" "src/handler/*.cpp")
 
-# Include the directory src/core/includes in the list of directories
+# Include the directory src/includes in the list of directories
 # that will be searched for header files during the compilation process.
-include_directories(src/core/includes)
+include_directories(src/includes src/core/includes)
 
 # Adds a shared library target to the project.
 # The library will be named as the project name with 'Lib' appended.
@@ -135,10 +135,10 @@ install(TARGETS ${CMAKE_PROJECT_NAME}Lib
     RUNTIME DESTINATION bin
 )
 
-# Install header files from the src/core/includes/ directory to the include directory.
+# Install header files from the src/includes/ directory to the include directory.
 # - FILES_MATCHING: Ensures only files matching the specified pattern are installed.
 # - PATTERN "*.hpp": Specifies that only files with the .hpp extension are installed.
-install(DIRECTORY src/core/includes/ DESTINATION include
+install(DIRECTORY src/includes/ DESTINATION include
     FILES_MATCHING PATTERN "*.hpp"
 )
 

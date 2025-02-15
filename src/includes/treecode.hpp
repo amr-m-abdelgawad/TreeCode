@@ -20,7 +20,7 @@
  * +--------------------------------------------------------------------------+
  * 
  * @file treecode.hpp
- * @class TreeCode
+ * @class treecode
  * @brief Header file for the treecode library.
  * @ingroup Core
  * 
@@ -41,11 +41,11 @@
 /**
  * @brief Include necessary headers
  */
-#include "common.hpp"
-#include "container.hpp"
-#include "element.hpp"
-#include "group.hpp"
-#include "template.hpp"
-#include "exception.hpp"
+#include "../core/includes/common.hpp"
+#include "../core/includes/container.hpp"
+#include "../core/includes/element.hpp"
+#include "../core/includes/group.hpp"
+#include "../core/includes/template.hpp"
+#include "../core/includes/exception.hpp"
 
 #endif // TREECODE_HPP

@@ -42,7 +42,7 @@
 */
 #include "includes/group.hpp"
 
-namespace TreeCode {
+namespace treecode {
     /**
      * @brief Constructor for the group class.
      * @param name The name of the group.
@@ -72,8 +72,10 @@ namespace TreeCode {
         const std::shared_ptr<group>& child
     ) {
         /* remove the child from the list of children */
-        this->__children.erase(std::remove_if(this->__children.begin(), this->__children.end(),
-            [&child](const std::shared_ptr<group>& g) { return g == child; }), this->__children.end());
+        this->__children.erase(
+            std::remove_if(this->__children.begin(), this->__children.end(),
+            [&child](const std::shared_ptr<group>& g) { return g == child; }), this->__children.end()
+        );
     }
 
     /**
@@ -93,4 +95,4 @@ namespace TreeCode {
      * @return A vector of shared pointers to the child groups.
      */
     const std::vector<std::shared_ptr<group>>& group::getChildren() const { return this->__children; }
-} // namespace TreeCode
+} // namespace treecode

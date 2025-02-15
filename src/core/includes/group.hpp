@@ -43,7 +43,7 @@
 */
 #include "container.hpp"
 
-namespace TreeCode {
+namespace treecode {
     /**
      * @class group
      * @brief Represents a node in the tree structure.
@@ -111,6 +111,6 @@ namespace TreeCode {
          */
         std::vector<std::shared_ptr<group>> __children;
     };
-} // namespace TreeCode
+} // namespace treecode
 
 #endif // GROUP_H

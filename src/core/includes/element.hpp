@@ -44,9 +44,9 @@
 */
 #include "common.hpp"
 
-namespace TreeCode
+namespace treecode
 {
-    namespace Type
+    namespace type
     {
         /**
          * @enum data_t
@@ -92,7 +92,7 @@ namespace TreeCode
              */
             UNKNOWN
         } data_t;
-    } // namespace ELEMENT
+    } // namespace type
     /**
      * @class element
      * @brief Represents an element with a label, description, type, and optional constraints.
@@ -118,7 +118,7 @@ namespace TreeCode
         element(
             const std::string& label, 
             const std::string& description, 
-            const Type::data_t& type
+            const type::data_t& type
         );
 
 
@@ -132,7 +132,7 @@ namespace TreeCode
         element(
             const std::string& label, 
             const std::string& description, 
-            const Type::data_t& type, 
+            const type::data_t& type, 
             const std::string& defaultValue
         );
 
@@ -147,7 +147,7 @@ namespace TreeCode
         element(
             const std::string& label, 
             const std::string& description, 
-            const Type::data_t& type, 
+            const type::data_t& type, 
             const bool& required
         );
 
@@ -163,7 +163,7 @@ namespace TreeCode
         element(
             const std::string& label, 
             const std::string& description, 
-            const Type::data_t& type, 
+            const type::data_t& type, 
             const std::string& defaultValue, 
             const bool& required
         );
@@ -179,7 +179,7 @@ namespace TreeCode
         element(
             const std::string& label, 
             const std::string& description, 
-            const Type::data_t& type, 
+            const type::data_t& type, 
             const std::vector<std::string>& allowedValues
         );
 
@@ -225,7 +225,7 @@ namespace TreeCode
          * @brief Gets the type of the element.
          * @return The type of the element.
          */
-        Type::data_t getType() const;
+        type::data_t getType() const;
 
 
         /**
@@ -256,10 +256,10 @@ namespace TreeCode
         std::string __description;
 
 
-        /** @var Type::data_t element::__type
+        /** @var type::data_t element::__type
          * The type of the element.
          */
-        Type::data_t __type;
+        type::data_t __type;
 
 
         /** @var std::string element::__value
@@ -285,6 +285,6 @@ namespace TreeCode
          */
         std::vector<std::string> __allowedValues;
     };
-} // namespace TreeCode
+} // namespace treecode
 
 #endif // ELEMENT_H

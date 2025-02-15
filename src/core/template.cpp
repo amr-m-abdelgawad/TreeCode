@@ -42,7 +42,7 @@
  */
 #include "includes/template.hpp"
 
-namespace TreeCode {
+namespace treecode {
     /**
      * @brief Constructor for the groupTemplate class.
      * @param name The name of the template.
@@ -147,4 +147,4 @@ namespace TreeCode {
         for (const auto& child : children) groupInstance->addChild(__cloneGroupInstance(child));
         return groupInstance;
     }
-} // namespace TreeCode
+} // namespace treecode

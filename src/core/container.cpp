@@ -42,7 +42,7 @@
 */
 #include "includes/container.hpp"
 
-namespace TreeCode {
+namespace treecode {
     /**
      * @brief Adds an element to the container with the specified key.
      * @param key The key associated with the element to be added.
@@ -107,4 +107,4 @@ namespace TreeCode {
         /* return the keys */
         return this->__keys;
     }
-} // namespace TreeCode
+} // namespace treecode
