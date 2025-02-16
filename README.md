@@ -15,7 +15,7 @@ TreeCode is a C++ library for managing hierarchical data structures. It includes
 ## Installation
 To install the project, clone the repository and follow the build instructions:
 ```bash
-git clone https://github.com/yourusername/TreeCode.git
+git clone https://github.com/amr-m-abdelgawad/TreeCode.git
 cd TreeCode
 cmake -B build
 cmake --build build --config Release
