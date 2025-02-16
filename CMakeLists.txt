@@ -81,7 +81,7 @@ option(BUILD_EXAMPLES "Build examples" ON)
 
 # Recursively collects all .cpp source files located in the src/core directory
 # and stores their paths in the LIB_SOURCES variable.
-file(GLOB_RECURSE LIB_SOURCES "src/core/*.cpp" "src/handler/*.cpp")
+file(GLOB_RECURSE LIB_SOURCES "src/core/*.cpp" "src/*.cpp")
 
 # Include the directory src/includes in the list of directories
 # that will be searched for header files during the compilation process.
@@ -102,27 +102,12 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/binaries/${CMAKE_BUILD_TYPE})
 # LIBRARY_OUTPUT_DIRECTORY: Directory for shared library files (.dll, .so).
 # RUNTIME_OUTPUT_DIRECTORY: Directory for executable files (.exe, .out).
 # OUTPUT_NAME: The base name for the output files, set to the project name.
-if(MSVC)
-    set_target_properties(${CMAKE_PROJECT_NAME}Lib PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/binaries/bin"
-        OUTPUT_NAME "${CMAKE_PROJECT_NAME}"
-    )
-    foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
-        string(TOUPPER ${OUTPUTCONFIG} UPPERCASE_CONFIG)
-        set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${UPPERCASE_CONFIG} ${CMAKE_BINARY_DIR}/lib)
-        set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${UPPERCASE_CONFIG} ${CMAKE_BINARY_DIR}/lib)
-        set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${UPPERCASE_CONFIG} ${CMAKE_BINARY_DIR}/bin)
-    endforeach()
-else()
-    set_target_properties(${CMAKE_PROJECT_NAME}Lib PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-        OUTPUT_NAME "${CMAKE_PROJECT_NAME}"
-    )
-endif()
+set_target_properties(${CMAKE_PROJECT_NAME}Lib PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    OUTPUT_NAME "${CMAKE_PROJECT_NAME}"
+)
 
 
 # Install the library target of the project.
@@ -141,6 +126,12 @@ install(TARGETS ${CMAKE_PROJECT_NAME}Lib
 install(DIRECTORY src/includes/ DESTINATION include
     FILES_MATCHING PATTERN "*.hpp"
 )
+
+# If the compiler is Microsoft Visual C++ (MSVC), export all symbols from the ${CMAKE_PROJECT_NAME}Lib executable.
+# This is necessary for creating DLLs that can be used by other applications on Windows.
+if(MSVC)
+    set_target_properties(${CMAKE_PROJECT_NAME}Lib PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
 # This CMake script checks if the BUILD_TESTS option is enabled.
 # If BUILD_TESTS is enabled:

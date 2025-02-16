@@ -54,7 +54,11 @@ void printGroupInfo(const std::shared_ptr<treecode::group>& group, int indent = 
     }
 }
 
-
+void printTree(const std::shared_ptr<treecode::group>& group) {
+    std::cout << "+------------------------------------------------------------------------------------------------------+"<<std::endl;
+    printGroupInfo(group);
+    std::cout << "+------------------------------------------------------------------------------------------------------+"<<std::endl;
+}
 
 int main() {
     using namespace treecode;
@@ -137,7 +141,7 @@ int main() {
         didList->addChild(std::move(didGroupInstance1));
         didList->addChild(std::move(didGroupInstance2));
         // Print the instances
-        printGroupInfo(didList);
+        printTree(didList);
     } catch (const std::exception& e) {
         std::cerr << "[Error] " << e.what() << std::endl;
     }
