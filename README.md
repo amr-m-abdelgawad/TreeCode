@@ -18,7 +18,7 @@ To install the project, clone the repository and follow the build instructions:
 git clone https://github.com/yourusername/TreeCode.git
 cd TreeCode
 cmake -B build
-cmake --build build --config release
+cmake --build build --config Release
 ```
 
 ## Usage
