@@ -3,9 +3,9 @@
 ![Build Status](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/CMake-Build.yml/badge.svg)
 [![CodeQL](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/codeql.yml)
 ![GitHub License](https://img.shields.io/github/license/amr-m-abdelgawad/TreeCode)
+![Static Badge](https://img.shields.io/badge/%40-Amr_MOUSA_2025-blue)
 
-## Overview
-TreeCode is a C++ library for managing hierarchical data structures. It includes classes for containers, elements, groups, templates, and logging. The library can be built as a shared library and includes options for building tests and examples.
+TreeCode is a C++ library for managing hierarchical data structures. It includes classes for containers, elements, groups, templates.
 
 ## Features
 - Efficient tree traversal algorithms
@@ -15,7 +15,7 @@ TreeCode is a C++ library for managing hierarchical data structures. It includes
 ## Installation
 To install the project, clone the repository and follow the build instructions:
 ```bash
-git clone https://github.com/yourusername/TreeCode.git
+git clone https://github.com/amr-m-abdelgawad/TreeCode.git
 cd TreeCode
 cmake -B build
 cmake --build build --config Release
