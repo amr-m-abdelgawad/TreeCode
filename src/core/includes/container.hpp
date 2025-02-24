@@ -44,7 +44,7 @@
  */
 #include "element.hpp"
 
-namespace treecode {
+namespace tc {
     /**
      * @class container
      * @brief Represents a container for storing elements in a key-value format.
@@ -58,14 +58,28 @@ namespace treecode {
         /**
          * @brief Adds an element to the container with the specified key.
          * @param key The key associated with the element to be added.
-         * @param element The element to be added to the container.
+         * @param element The pointer of the element to be added to the container.
          * @throws std::invalid_argument if the key already exists in the container.
          */
-        void addElement(
-            const std::string& key, 
-            const element& element
+        std::shared_ptr<base> add(
+            const std::string& key
         );
 
+        std::shared_ptr<base> add(
+            const std::string& key,
+            const base::type& defaultValue
+        );
+    
+    
+        std::shared_ptr<base> add(
+            const std::string& key,
+            const multi& choices
+        );
+
+        std::shared_ptr<base> add(
+            const std::string& key,
+            const std::shared_ptr<base>& elementPtr
+        );
 
         /**
          * This method is overloaded to allow for getting elements by key
@@ -74,16 +88,16 @@ namespace treecode {
         /**
          * @brief Gets the element with the specified key from the container.
          * @param key The key of the element to retrieve.
-         * @return The element with the specified key.
+         * @return pointer to the element with the specified key.
          * @throws std::out_of_range if the key is not found in the container.
          */
         /* non-constant version of the method */
-        element& getElement(
+        std::shared_ptr<base>& get(
             const std::string& key
         );
 
         /* constant version of the method */
-        const element& getElement(
+        const std::shared_ptr<base>& get(
             const std::string& key
         ) const;
 
@@ -100,7 +114,7 @@ namespace treecode {
          * @var std::unordered_map<std::string, element> container::__elements
          * The elements stored in the container.
          */
-        std::unordered_map<std::string, element> __elements;
+        std::unordered_map<std::string, std::shared_ptr<base>> __elements;
 
 
         /**

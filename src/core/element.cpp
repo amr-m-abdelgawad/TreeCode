@@ -41,54 +41,14 @@
 */
 #include "includes/element.hpp"
 
-namespace treecode {
+namespace tc {
     /**
      * @brief Default constructor for the element class.
      * Initializes the element with default values.
      */
     element::element() :
-        __label("NOT_SET"), 
-        __description("NOT_SET"), 
-        __type(type::UNKNOWN), 
-        __isValueSet(false) {}
-
-
-    /**
-     * @brief Constructor for the element class.
-     * @param label The label of the element.
-     * @param description The description of the element.
-     * @param type The type of the element.
-     * Initializes the element with the given label, description, and type.
-     * Throws an exception if the type is MULTIVALUES.
-     */
-    element::element(
-        const std::string& label, 
-        const std::string& description, 
-        const type::data_t& type
-    ) :
-        __label(label), 
-        __description(description), 
-        __type(type) {
-        /* Throw an exception if the type is unknown */
-        if(type >= type::UNKNOWN) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_INVALID_TYPE);
-        switch (type) {
-            /* set the default value based on the type */
-            case type::BOOLEAN:
-                this->__value = "false";
-                this->__isValueSet = true;
-                break;
-            case type::MULTIVALUES:
-                /* throw an exception if the type is multivalues */
-                Exception::Throw::Invalid(this->__label, Exception::ELEMENT_WRONG_TYPE_FOR_MULTIVALUES);
-                break;
-            default:
-                /* set the default value to an empty string */
-                this->__value = "";
-                /* set the value set flag to false */
-                this->__isValueSet = false;
-                break;
-        }
-    }
+        __isChoices(false),
+        __isRequired(false) {}
 
 
     /**
@@ -100,55 +60,8 @@ namespace treecode {
      * Initializes the element with the given label, description, type, and default value.
      */
     element::element(
-        const std::string& label, 
-        const std::string& description, 
-        const type::data_t& type, 
-        const std::string& defaultValue
-    ) :
-        element(label, description, type) {
-        if(defaultValue.empty()) this->__isValueSet = false;
-        else {
-            /* set the value and the value set flag */
-            this->__value = defaultValue;
-            this->__isValueSet = true;
-        }
-    }
-
-
-    /**
-     * @brief Constructor for the element class with a required flag.
-     * @param label The label of the element.
-     * @param description The description of the element.
-     * @param type The type of the element.
-     * @param required The required flag of the element.
-     * Initializes the element with the given label, description, type, and required flag.
-     */
-    element::element(
-        const std::string& label, 
-        const std::string& description, 
-        const type::data_t& type, 
-        const bool& required
-    ) :
-        element(label, description, type) { this->__required = required; }
-
-
-    /**
-     * @brief Constructor for the element class with a default value and required flag.
-     * @param label The label of the element.
-     * @param description The description of the element.
-     * @param type The type of the element.
-     * @param defaultValue The default value of the element.
-     * @param required The required flag of the element.
-     * Initializes the element with the given label, description, type, default value, and required flag.
-     */
-    element::element(
-        const std::string& label, 
-        const std::string& description, 
-        const type::data_t& type, 
-        const std::string& defaultValue, 
-        const bool& required
-    ) :
-        element(label, description, type, defaultValue) { this->__required = required; }
+        const type& defaultValue
+    ) : element() { this->__value = defaultValue; }
 
 
     /**
@@ -161,25 +74,15 @@ namespace treecode {
      * Throws an exception if the type is not MULTIVALUES or if the allowed values list is empty.
      */
     element::element(
-        const std::string& label, 
-        const std::string& description, 
-        const type::data_t& type, 
-        const std::vector<std::string>& allowedValues
-    ) :
-        __label(label), 
-        __description(description), 
-        __type(type), 
-        __allowedValues(allowedValues) {
-        /* Throw an exception if the type is unknown */
-        if(type >= type::UNKNOWN) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_TYPE_UNKNOWN);
-        /* Throw an exception if the type is not multivalues */
-        if(type != type::MULTIVALUES) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_WRONG_TYPE_FOR_MULTIVALUES);
-        if (!allowedValues.empty()) {
+        const multi& choices
+    ) : __choices(choices),
+        __isChoices(true) {
+        if (!choices.empty()) {
             /* Set the default value to the first allowed value */
-            this->__value = allowedValues[0];
-            /* Set the value set flag */
-            this->__isValueSet = true;
-        } else Exception::Throw::Invalid(this->__label, Exception::ELEMENT_ALLOWED_VALUES_EMPTY); /* Throw an exception if the allowed values list is empty */
+            this->__value = choices[FIRST_ELEMENT];
+            /* Set the required flag */
+            this->__isRequired = true;
+        } else Exception::Throw::Invalid("Multivalue Element", Exception::ELEMENT_ALLOWED_VALUES_EMPTY); /* Throw an exception if the allowed values list is empty */
     }
 
 
@@ -188,28 +91,20 @@ namespace treecode {
      * @param newValue The new value to set.
      * Throws an exception if the value is not in the allowed values list for multivalues type or if the element type is unknown.
      */
-    void element::setValue(
-        const std::string& newValue
+    void element::set(
+        const type& newValue
     ) {
-        if (this->__type == type::MULTIVALUES) {
+        if (this->__isChoices) {
             /* check if value is in the allowed values list */
-            if (std::find(this->__allowedValues.begin(), this->__allowedValues.end(), newValue) != this->__allowedValues.end()) {
+            if (std::find(this->__choices.begin(), this->__choices.end(), newValue) != this->__choices.end()) {
                 /* set the value and the value set flag */
                 this->__value = newValue;
-                /* set the value set flag */
-                this->__isValueSet = true;
             }
             /* throw an exception if the value is not in the allowed values list */
-            else Exception::Throw::Invalid(this->__label, Exception::ELEMENT_VALUE_NOT_ALLOWED);
+            else Exception::Throw::Invalid("Multivalue Element", Exception::ELEMENT_VALUE_NOT_ALLOWED);
         }
-        /* throw an exception if the element type is unknown */
-        else if (this->__type >= type::UNKNOWN) Exception::Throw::Invalid(this->__label, Exception::ELEMENT_TYPE_UNKNOWN);
         /* set the value for other types */
         else {
-            /* check if value is empty*/
-            if(newValue.empty()) this->__isValueSet = false;
-            /* set the value and the value set flag */
-            else this->__isValueSet = true;
             /* set the value */
             this->__value = newValue;
         }
@@ -220,7 +115,9 @@ namespace treecode {
      * @brief Gets the value of the element.
      * @return The value of the element.
      */
-    std::string element::getValue() const { return this->__value; }
+    std::optional<base::type> element::data() const { 
+        return this->__value.has_value() ? this->__value : std::nullopt;
+    }
 
 
     /**
@@ -228,48 +125,29 @@ namespace treecode {
      * @return The allowed values of the element.
      * Throws an exception if the element type is not MULTIVALUES.
      */
-    std::vector<std::string> element::getAllowedValues() const {
+    multi element::choices() const {
         /* throw an exception if the element type is not multivalues */
-        if(this->__type != type::MULTIVALUES) {
-            Exception::Throw::Invalid(this->__label, Exception::ELEMENT_MULTIVALUES_ALLOWED_MISSING);
+        if(!this->__isChoices) {
+            Exception::Throw::Invalid("Multivalue Element", Exception::ELEMENT_MULTIVALUES_ALLOWED_MISSING);
             return {}; // Return an empty vector to satisfy the return type
         }
         /* return the allowed values */
-        else return this->__allowedValues;
+        else return this->__choices;
     }
-
-
-    /**
-     * @brief Gets the label of the element.
-     * @return The label of the element.
-     */
-    std::string element::getLabel() const { return this->__label; }
-
-
-    /**
-     * @brief Gets the description of the element.
-     * @return The description of the element.
-     */
-    std::string element::getDescription() const { return this->__description; }
-
-
-    /**
-     * @brief Gets the type of the element.
-     * @return The type of the element.
-     */
-    type::data_t element::getType() const { return this->__type; }
 
 
     /**
      * @brief Checks if the element is required.
      * @return True if the element is required, false otherwise.
      */
-    bool element::isRequired() const { return this->__required; }
+    bool element::isReq() const { return this->__isRequired; }
 
 
     /**
-     * @brief Checks if the value of the element is set.
-     * @return True if the value is set, false otherwise.
+     * @brief Sets the element as required.
+     * @return void
      */
-    bool element::isValueSet() const { return this->__isValueSet; }
+    void element::setReq() {
+        this->__isRequired = true;
+    }
 } // namespace treecode

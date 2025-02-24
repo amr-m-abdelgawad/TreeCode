@@ -31,31 +31,34 @@
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/binaries/${CMAKE_BUILD_TYPE})
 
 # ==============================================================================
-# 1. Example: DID_Lists
+# 1. Example: Did_Tree
 # ==============================================================================
-# This CMakeLists.txt file defines a CMake project that creates an executable target named "DID_Lists".
-# The executable is built from the source file located at "DID_Lists/main.cpp".
-add_executable(DID_Lists 
-    DID_Lists/main.cpp
+# This CMakeLists.txt file defines a CMake project that creates an executable target named "Did_Tree".
+# The executable is built from the source file located at "Did_Tree/main.cpp".
+add_executable(Did_Tree 
+    Did_Tree/main.cpp
+    Did_Tree/print.cpp
 )
 
-# Adds a dependency for the target 'DID_Lists' on the library target '${CMAKE_PROJECT_NAME}Lib'.
-# This ensures that '${CMAKE_PROJECT_NAME}Lib' is built before 'DID_Lists'.
-add_dependencies(DID_Lists ${CMAKE_PROJECT_NAME}Lib)
+# Adds a dependency for the target 'Did_Tree' on the library target '${CMAKE_PROJECT_NAME}Lib'.
+# This ensures that '${CMAKE_PROJECT_NAME}Lib' is built before 'Did_Tree'.
+add_dependencies(Did_Tree ${CMAKE_PROJECT_NAME}Lib)
 
-# Links the target DID_Lists with the private library ${CMAKE_PROJECT_NAME}Lib.
-# This means that ${CMAKE_PROJECT_NAME}Lib will be used only for DID_Lists and
-# will not be exposed to other targets that link with DID_Lists.
-target_link_libraries(DID_Lists PRIVATE ${CMAKE_PROJECT_NAME}Lib)
+# Links the target Did_Tree with the private library ${CMAKE_PROJECT_NAME}Lib.
+# This means that ${CMAKE_PROJECT_NAME}Lib will be used only for Did_Tree and
+# will not be exposed to other targets that link with Did_Tree.
+target_link_libraries(Did_Tree PRIVATE ${CMAKE_PROJECT_NAME}Lib)
 
-# Sets properties for the target 'DID_Lists':
+include_directories(Did_Tree/includes)
+
+# Sets properties for the target 'Did_Tree':
 # - RUNTIME_OUTPUT_DIRECTORY: Specifies the directory where the runtime 
 #   executable will be placed. It is set to a path that includes the source 
 #   directory, build type, and 'bin' directory.
-# - OUTPUT_NAME: Defines the name of the output executable as 'DID_Lists'.
+# - OUTPUT_NAME: Defines the name of the output executable as 'Did_Tree'.
 
-set_target_properties(DID_Lists PROPERTIES
+set_target_properties(Did_Tree PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    OUTPUT_NAME "DID_Lists"
+    OUTPUT_NAME "Did_Tree"
 )
 # ==============================================================================

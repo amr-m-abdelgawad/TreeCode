@@ -43,7 +43,7 @@
  */
 #include "common.hpp"
 
-namespace treecode {
+namespace tc {
     /**
      * @namespace Exception
      * @brief Contains exception messages used throughout the library.

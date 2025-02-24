@@ -43,7 +43,7 @@
 */
 #include "container.hpp"
 
-namespace treecode {
+namespace tc {
     /**
      * @class group
      * @brief Represents a node in the tree structure.
@@ -65,19 +65,21 @@ namespace treecode {
          * @brief Adds a child group to the current group.
          * @param child The child group to add.
          */
-        void addChild(std::shared_ptr<group>&& child);
+        void add(const std::shared_ptr<group>& child);
 
         /**
          * @brief Removes a child group from the current group.
          * @param child The child group to remove.
          */
-        void removeChild(const std::shared_ptr<group>& child);
+        void remove(const std::shared_ptr<group>& child);
 
         /**
          * @brief Gets the container of the group.
          * @return The container of the group.
          */
-        container& getContainer();
+        container& inside();
+
+        const container& inside() const;
 
         /**
          * @brief Gets the name of the group.

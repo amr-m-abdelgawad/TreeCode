@@ -44,7 +44,7 @@
  */
 #include "group.hpp"
 
-namespace treecode {
+namespace tc {
     /**
      * @brief The groupTemplate class represents a predefined structure of the tree.
      * 
@@ -52,14 +52,14 @@ namespace treecode {
      * which can be used to create instances of the tree. The template is defined
      * by a list of groups that define the structure of the tree.
      */
-    class groupTemplate {
+    class tmpl {
     public:
         /**
          * @brief Constructor for the groupTemplate class.
          * @param name The name of the template.
          * Initializes the template with the given name.
          */
-        groupTemplate(
+        tmpl(
             const std::string& name
         );
 
@@ -68,7 +68,7 @@ namespace treecode {
          * @param group The group to add.
          * Adds the specified group to the template.
          */
-        void addGroup(
+        void add(
             const std::shared_ptr<group>& group
         );
 
@@ -95,7 +95,7 @@ namespace treecode {
          * @param groupName The name of the group.
          * @return An instance of the group.
          */
-        std::shared_ptr<group> createGroupInstance(
+        std::shared_ptr<group> clone(
             const std::string& groupName
         ) const;
 

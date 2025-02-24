@@ -47,5 +47,6 @@
 #include "../core/includes/group.hpp"
 #include "../core/includes/template.hpp"
 #include "../core/includes/exception.hpp"
+#include "../core/includes/base.hpp"
 
 #endif // TREECODE_HPP

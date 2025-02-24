@@ -42,23 +42,72 @@
 */
 #include "includes/container.hpp"
 
-namespace treecode {
+namespace tc {
     /**
      * @brief Adds an element to the container with the specified key.
      * @param key The key associated with the element to be added.
-     * @param element The element to be added to the container.
+     * @param element The pointer of the element to be added to the container.
      * @throws std::invalid_argument if the key already exists in the container.
      */
-    void container::addElement(
-        const std::string& key, 
-        const element& element
+    std::shared_ptr<base> container::add(
+        const std::string& key 
     ) {
+        auto elementPtr = std::make_shared<element>();
         /* try to add the element to the container */
-        auto result = this->__elements.try_emplace(key, element);
+        auto result = this->__elements.try_emplace(key, elementPtr);
         /* throw an exception if the key already exists */
         if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
         /* add the key to the list of keys */
         this->__keys.emplace_back(key);
+
+        return elementPtr;
+    }
+
+
+    std::shared_ptr<base> container::add(
+        const std::string& key,
+        const base::type& defaultValue
+    ) {
+        auto elementPtr = std::make_shared<element>(defaultValue);
+        /* try to add the element to the container */
+        auto result = this->__elements.try_emplace(key, elementPtr);
+        /* throw an exception if the key already exists */
+        if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
+        /* add the key to the list of keys */
+        this->__keys.emplace_back(key);
+
+        return elementPtr;
+    }
+
+
+    std::shared_ptr<base> container::add(
+        const std::string& key,
+        const multi& choices
+    ) {
+        auto elementPtr = std::make_shared<element>(choices);
+        /* try to add the element to the container */
+        auto result = this->__elements.try_emplace(key, elementPtr);
+        /* throw an exception if the key already exists */
+        if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
+        /* add the key to the list of keys */
+        this->__keys.emplace_back(key);
+
+        return elementPtr;
+    }
+
+
+    std::shared_ptr<base> container::add(
+        const std::string& key,
+        const std::shared_ptr<base>& elementPtr
+    ) {
+        /* try to add the element to the container */
+        auto result = this->__elements.try_emplace(key, elementPtr);
+        /* throw an exception if the key already exists */
+        if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
+        /* add the key to the list of keys */
+        this->__keys.emplace_back(key);
+
+        return elementPtr;
     }
 
 
@@ -69,7 +118,7 @@ namespace treecode {
     /**
      * @brief Gets the element with the specified key from the container.
      * @param key The key of the element to retrieve.
-     * @return The element with the specified key.
+     * @return Pointer to the element with the specified key.
      * @throws std::out_of_range if the key is not found in the container.
      */
     #define GET_ELEMENT_IMPL() \
@@ -83,14 +132,14 @@ namespace treecode {
 
 
     /* non-constant version of the method */
-    element& container::getElement(
+    std::shared_ptr<base>& container::get(
         const std::string& key
     ) { 
         GET_ELEMENT_IMPL() 
     }
 
     /* constant version of the method */
-    const element& container::getElement(
+    const std::shared_ptr<base>& container::get(
         const std::string& key
     ) const { 
         GET_ELEMENT_IMPL()

@@ -42,7 +42,7 @@
 */
 #include "includes/group.hpp"
 
-namespace treecode {
+namespace tc {
     /**
      * @brief Constructor for the group class.
      * @param name The name of the group.
@@ -56,19 +56,19 @@ namespace treecode {
      * @brief Adds a child group to the current group.
      * @param child The child group to add.
      */
-    void group::addChild(
-        std::shared_ptr<group>&& child
+    void group::add(
+        const std::shared_ptr<group>& child
     ) {
         /* add the child to the list of children */
         if (std::find(this->__children.begin(), this->__children.end(), child) == this->__children.end())
-            this->__children.emplace_back(std::move(child));
+            this->__children.emplace_back(child);
     }
 
     /**
      * @brief Removes a child group from the current group.
      * @param child The child group to remove.
      */
-    void group::removeChild(
+    void group::remove(
         const std::shared_ptr<group>& child
     ) {
         /* remove the child from the list of children */
@@ -82,7 +82,10 @@ namespace treecode {
      * @brief Gets the container of the group.
      * @return The container of the group.
      */
-    container& group::getContainer() { return this->__container; }
+    container& group::inside() { return this->__container; }
+
+    const container& group::inside() const { return this->__container; }
+    
 
     /**
      * @brief Gets the name of the group.

@@ -43,56 +43,14 @@
  * @brief Include necessary headers
 */
 #include "common.hpp"
+#include "base.hpp"
 
-namespace treecode
+#define FIRST_ELEMENT   0U
+
+namespace tc
 {
-    namespace type
-    {
-        /**
-         * @enum data_t
-         * @brief Represents the type of data an element can hold.
-         * 
-         * This enumeration defines the various types of data that an element can represent.
-         * The types include text, numerical, floating-point, multivalues, boolean, and unknown.
-         */
-        typedef enum {
-            /**
-             * @var TEXT
-             * Represents a text element.
-             */
-            TEXT,
+    
 
-            /**
-             * @var NUMERICAL
-             * Represents a numerical element.
-             */
-            NUMERICAL,
-
-            /**
-             * @var FLOAT
-             * Represents a floating-point element.
-             */
-            FLOAT,
-
-            /**
-             * @var MULTIVALUES
-             * Represents an element that can hold multiple values.
-             */
-            MULTIVALUES,
-
-            /**
-             * @var BOOLEAN
-             * Represents a boolean element.
-             */
-            BOOLEAN,
-
-            /**
-             * @var UNKNOWN
-             * Represents an unknown element type.
-             */
-            UNKNOWN
-        } data_t;
-    } // namespace type
     /**
      * @class element
      * @brief Represents an element with a label, description, type, and optional constraints.
@@ -101,25 +59,12 @@ namespace treecode
      * such as label, description, type, default value, required flag, and allowed values. It also 
      * supports serialization to and from JSON.
      */
-    class element {
+    class element : public base {
     public:
         /**
          * @brief Default constructor for the element class.
          */
         element();
-
-
-        /**
-         * @brief Constructs an element with the specified label, description, and type.
-         * @param label The label of the element.
-         * @param description The description of the element.
-         * @param type The type of the element.
-         */
-        element(
-            const std::string& label, 
-            const std::string& description, 
-            const type::data_t& type
-        );
 
 
         /**
@@ -130,42 +75,7 @@ namespace treecode
          * @param defaultValue The default value of the element.
          */
         element(
-            const std::string& label, 
-            const std::string& description, 
-            const type::data_t& type, 
-            const std::string& defaultValue
-        );
-
-
-        /**
-         * @brief Constructs an element with the specified label, description, type, and required flag.
-         * @param label The label of the element.
-         * @param description The description of the element.
-         * @param type The type of the element.
-         * @param required Indicates whether the element is required.
-         */
-        element(
-            const std::string& label, 
-            const std::string& description, 
-            const type::data_t& type, 
-            const bool& required
-        );
-
-
-        /**
-         * @brief Constructs an element with the specified label, description, type, default value, and required flag.
-         * @param label The label of the element.
-         * @param description The description of the element.
-         * @param type The type of the element.
-         * @param defaultValue The default value of the element.
-         * @param required Indicates whether the element is required.
-         */
-        element(
-            const std::string& label, 
-            const std::string& description, 
-            const type::data_t& type, 
-            const std::string& defaultValue, 
-            const bool& required
+            const type& defaultValue
         );
 
 
@@ -177,10 +87,7 @@ namespace treecode
          * @param allowedValues The allowed values for the element.
          */
         element(
-            const std::string& label, 
-            const std::string& description, 
-            const type::data_t& type, 
-            const std::vector<std::string>& allowedValues
+            const multi& choices
         );
 
 
@@ -188,102 +95,61 @@ namespace treecode
          * @brief Sets the value of the element.
          * @param newValue The new value to set.
          */
-        void setValue(
-            const std::string& newValue
-        );
+        void set(
+            const type& newValue
+        ) override;
 
 
         /**
          * @brief Gets the current value of the element.
          * @return The current value of the element.
          */
-        std::string getValue() const;
+        std::optional<type> data() const override;
 
 
         /**
          * @brief Gets the allowed values for the element.
          * @return A vector of allowed values.
          */
-        std::vector<std::string> getAllowedValues() const;
-
-
-        /**
-         * @brief Gets the label of the element.
-         * @return The label of the element.
-         */
-        std::string getLabel() const;
-
-
-        /**
-         * @brief Gets the description of the element.
-         * @return The description of the element.
-         */
-        std::string getDescription() const;
-
-
-        /**
-         * @brief Gets the type of the element.
-         * @return The type of the element.
-         */
-        type::data_t getType() const;
+        multi choices() const;
 
 
         /**
          * @brief Checks if the element is required.
          * @return True if the element is required, false otherwise.
          */
-        bool isRequired() const;
+        bool isReq() const override;
 
 
         /**
-         * @brief Checks if the value of the element is set.
-         * @return True if the value is set, false otherwise.
+         * @brief Sets the element as required.
+         * @return void
          */
-        bool isValueSet() const;
-
+        void setReq() override;
 
     private:
-        /**
-         * @var std::string element::__label
-         * The label of the element.
-         */
-        std::string __label;
-
-
-        /** @var std::string element::__description
-         * The description of the element.
-         */
-        std::string __description;
-
-
-        /** @var type::data_t element::__type
-         * The type of the element.
-         */
-        type::data_t __type;
-
-
         /** @var std::string element::__value
          * The current value of the element.
          */
-        std::string __value;
-
-
-        /** @var bool element::__isValueSet
-         * Indicates whether the value of the element has been set.
-         */
-        bool __isValueSet;
-
-
-        /** @var bool element::__required
-         * Indicates whether the element is required.
-         */
-        bool __required;
+        std::optional<type> __value;
 
 
         /** @var std::vector<std::string> element::__allowedValues
          * The allowed values for the element.
          */
-        std::vector<std::string> __allowedValues;
+        multi __choices;
+
+
+        /** @var type::data_t element::__type
+         * The type of the element.
+         */
+        bool __isChoices;
+
+
+        /** @var bool element::__required
+         * Indicates whether the element is required.
+         */
+        bool __isRequired;
     };
 } // namespace treecode
 

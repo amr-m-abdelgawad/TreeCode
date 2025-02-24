@@ -48,6 +48,9 @@
 #include <memory>
 #include <exception>
 #include <sstream>
+#include <variant>
+#include <optional>
+// #include <iostream> //testing
 #include "exception.hpp"
 
 #endif // COMMON_H

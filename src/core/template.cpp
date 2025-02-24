@@ -20,11 +20,11 @@
  * +--------------------------------------------------------------------------+
  * 
  * @file template.cpp
- * @class groupTemplate
- * @brief Implementation file for the groupTemplate class.
+ * @class tmpl
+ * @brief Implementation file for the tmpl class.
  * @ingroup Core
  * 
- * This file contains the implementation of the groupTemplate class, 
+ * This file contains the implementation of the tmpl class, 
  * which represents a predefined structure of the tree.
  * 
  * @version 0.0.1
@@ -34,7 +34,7 @@
  * 
  * File History:
  * - Version 0.0.1: 
- *      - Initial Implementation of the groupTemplate class
+ *      - Initial Implementation of the tmpl class
  */
 
 /**
@@ -42,13 +42,13 @@
  */
 #include "includes/template.hpp"
 
-namespace treecode {
+namespace tc {
     /**
-     * @brief Constructor for the groupTemplate class.
+     * @brief Constructor for the tmpl class.
      * @param name The name of the template.
      * Initializes the template with the given name.
      */
-    groupTemplate::groupTemplate(
+    tmpl::tmpl(
         const std::string& name
     ) : __name(name) {}
 
@@ -58,7 +58,7 @@ namespace treecode {
      * @param group The group to add.
      * Adds the specified group to the template.
      */
-    void groupTemplate::addGroup(
+    void tmpl::add(
         const std::shared_ptr<group>& groupPtr
     ) {
         /* add the group to the list of groups */
@@ -71,27 +71,27 @@ namespace treecode {
      * @brief Method to get the name of the template.
      * @return The name of the template.
      */
-    std::string groupTemplate::getName() const { return this->__name; }
+    std::string tmpl::getName() const { return this->__name; }
 
 
     /**
      * @brief Method to get the groups in the template.
      * @return The groups in the template.
      */
-    const std::vector<std::shared_ptr<group>>& groupTemplate::getGroups() const { return this->__groups; }
+    const std::vector<std::shared_ptr<group>>& tmpl::getGroups() const { return this->__groups; }
 
 
     /**
      * @brief Method to create an instance of the template.
      * @return The created instance of the template.
      */
-    std::shared_ptr<group> groupTemplate::createInstance() const {
+    std::shared_ptr<group> tmpl::createInstance() const {
         /* create an instance of the template */
         auto instance = std::make_shared<group>(this->__name);
         /* add the groups to the instance */
         for (const auto& group : this->__groups) {
             /* clone the group instance and add it to the instance */
-            if (group) instance->addChild(__cloneGroupInstance(group));
+            if (group) instance->add(__cloneGroupInstance(group));
             else Exception::Throw::Invalid(this->__name, Exception::NULL_GROUP);
         }
         return instance;
@@ -103,7 +103,7 @@ namespace treecode {
      * @param groupName The name of the group to create an instance of.
      * @return The created instance of the group.
      */
-    std::shared_ptr<group> groupTemplate::createGroupInstance(
+    std::shared_ptr<group> tmpl::clone(
         const std::string& groupName
     ) const {
         /* find the group in the template */
@@ -129,22 +129,25 @@ namespace treecode {
      * @param groupIns The group instance to clone.
      * @return The cloned group instance.
      */
-    std::shared_ptr<group> groupTemplate::__cloneGroupInstance(
+    std::shared_ptr<group> tmpl::__cloneGroupInstance(
         std::shared_ptr<group> groupIns
     ) const {
         /* create a new group instance */
         auto groupInstance = std::make_shared<group>(groupIns->getName());
         /* add the elements to the group instance */
-        const auto& container = groupIns->getContainer();
+        const auto& container = groupIns->inside();
         /* add the elements to the group instance */
-        for (const auto& key : container.getKeys())
-            groupInstance->getContainer().addElement(key, container.getElement(key));
+        for (const auto& key : container.getKeys()) {
+            auto elementPtr = container.get(key);
+            auto newElementPtr = std::make_shared<element>(*std::dynamic_pointer_cast<element>(elementPtr));
+            groupInstance->inside().add(key, newElementPtr);
+        }
         /* add the child groups to the group instance */
         auto children = groupIns->getChildren();
         /* return the group instance if no children */
         if (children.empty()) return groupInstance;
         /* add the children to the group instance */
-        for (const auto& child : children) groupInstance->addChild(__cloneGroupInstance(child));
+        for (const auto& child : children) groupInstance->add(__cloneGroupInstance(child));
         return groupInstance;
     }
 } // namespace treecode
