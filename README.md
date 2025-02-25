@@ -1,7 +1,7 @@
 # tc Project
 
 ![Build Status](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/CMake-Build.yml/badge.svg)
-[![CodeQL](https://github.com/amr-m-abdelgawad/tc/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/codeql.yml)
+[![CodeQL](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/codeql.yml)
 ![GitHub License](https://img.shields.io/github/license/amr-m-abdelgawad/TreeCode)
 ![Static Badge](https://img.shields.io/badge/%40-Amr_MOUSA_2025-blue)
 
