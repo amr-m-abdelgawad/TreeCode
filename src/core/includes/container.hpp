@@ -61,24 +61,27 @@ namespace tc {
          * @param element The pointer of the element to be added to the container.
          * @throws std::invalid_argument if the key already exists in the container.
          */
-        std::shared_ptr<base> add(
+        template <typename T>
+        std::shared_ptr<element<T>> add(
             const std::string& key
         );
 
-        std::shared_ptr<base> add(
+        template <typename T>
+        std::shared_ptr<element<T>> add(
             const std::string& key,
-            const base::type& defaultValue
+            const T& value
         );
     
-    
-        std::shared_ptr<base> add(
+        template <typename T>
+        std::shared_ptr<element<T>> add(
             const std::string& key,
-            const multi& choices
+            const std::vector<T>& choices
         );
 
+        // template <typename T>
         std::shared_ptr<base> add(
             const std::string& key,
-            const std::shared_ptr<base>& elementPtr
+            const std::shared_ptr<base>& ptr
         );
 
         /**
@@ -101,6 +104,15 @@ namespace tc {
             const std::string& key
         ) const;
 
+        template <typename T>
+        std::shared_ptr<element<T>> get(
+            const std::string& key
+        );
+
+        template <typename T>
+        std::shared_ptr<element<T>> get(
+            const std::string& key
+        ) const;
 
         /**
          * @brief Gets the keys of the elements in the container.
@@ -123,6 +135,80 @@ namespace tc {
          */
         std::vector<std::string> __keys;
     };
+
+
+    /**
+     * @brief Adds an element to the container with the specified key.
+     * @param key The key associated with the element to be added.
+     * @param element The pointer of the element to be added to the container.
+     * @throws std::invalid_argument if the key already exists in the container.
+     */
+    template <typename T>
+    std::shared_ptr<element<T>> container::add(
+        const std::string& key 
+    ) {
+        auto elementPtr = std::make_shared<element<T>>();
+        /* try to add the element to the container */
+        auto result = this->__elements.try_emplace(key, elementPtr);
+        /* throw an exception if the key already exists */
+        if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
+        /* add the key to the list of keys */
+        this->__keys.emplace_back(key);
+        return elementPtr;
+    }
+
+
+    template <typename T>
+    std::shared_ptr<element<T>> container::add(
+        const std::string& key,
+        const T& value
+    ) {
+        auto elementPtr = std::make_shared<element<T>>(value);
+        /* try to add the element to the container */
+        auto result = this->__elements.try_emplace(key, elementPtr);
+        /* throw an exception if the key already exists */
+        if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
+        /* add the key to the list of keys */
+        this->__keys.emplace_back(key);
+
+        return elementPtr;
+    }
+
+
+    template <typename T>
+    std::shared_ptr<element<T>> container::add(
+        const std::string& key,
+        const std::vector<T>& choices
+    ) {
+        auto elementPtr = std::make_shared<element<T>>(choices);
+        /* try to add the element to the container */
+        auto result = this->__elements.try_emplace(key, elementPtr);
+        /* throw an exception if the key already exists */
+        if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
+        /* add the key to the list of keys */
+        this->__keys.emplace_back(key);
+
+        return elementPtr;
+    }
+
+
+    /* non-constant version of the method */
+    template <typename T>
+    std::shared_ptr<element<T>> container::get(
+        const std::string& key
+    ) { 
+        auto basePtr = get(key);
+        return std::dynamic_pointer_cast<element<T>>(basePtr);
+    }
+
+    /* constant version of the method */
+    template <typename T>
+    std::shared_ptr<element<T>> container::get(
+            const std::string& key
+    ) const { 
+        auto basePtr = get(key);
+        return std::dynamic_pointer_cast<element<T>>(basePtr);
+    }
 } // namespace treecode
 
 #endif // CONTAINER_H

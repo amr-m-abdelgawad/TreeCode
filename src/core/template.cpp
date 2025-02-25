@@ -85,7 +85,7 @@ namespace tc {
      * @brief Method to create an instance of the template.
      * @return The created instance of the template.
      */
-    std::shared_ptr<group> tmpl::createInstance() const {
+    std::shared_ptr<group> tmpl::clone() const {
         /* create an instance of the template */
         auto instance = std::make_shared<group>(this->__name);
         /* add the groups to the instance */
@@ -104,21 +104,24 @@ namespace tc {
      * @return The created instance of the group.
      */
     std::shared_ptr<group> tmpl::clone(
-        const std::string& groupName
+        const std::string& name
     ) const {
         /* find the group in the template */
-        auto it = std::find_if(this->__groups.begin(), this->__groups.end(), [&groupName](
+        auto it = std::find_if(this->__groups.begin(), this->__groups.end(), [&name](
             const std::shared_ptr<group>& grp
         ) {
             /* return the group if found */
-            return grp->getName() == groupName;
+            return grp->getName() == name;
         });
+
         /* create an instance of the group if found */
-        if (it != this->__groups.end()) return __cloneGroupInstance(*it);
+        if (it != this->__groups.end())  {
+            return __cloneGroupInstance(*it);
+        }
         /* throw an exception if the group was not found */
         else {
             return nullptr;
-            Exception::Throw::Invalid(groupName, Exception::TEMPLATE_GROUP_NOT_FOUND);
+            Exception::Throw::Invalid(name, Exception::TEMPLATE_GROUP_NOT_FOUND);
         }
         
     }
@@ -130,24 +133,23 @@ namespace tc {
      * @return The cloned group instance.
      */
     std::shared_ptr<group> tmpl::__cloneGroupInstance(
-        std::shared_ptr<group> groupIns
+        const std::shared_ptr<group>& instance
     ) const {
         /* create a new group instance */
-        auto groupInstance = std::make_shared<group>(groupIns->getName());
-        /* add the elements to the group instance */
-        const auto& container = groupIns->inside();
-        /* add the elements to the group instance */
-        for (const auto& key : container.getKeys()) {
-            auto elementPtr = container.get(key);
-            auto newElementPtr = std::make_shared<element>(*std::dynamic_pointer_cast<element>(elementPtr));
-            groupInstance->inside().add(key, newElementPtr);
+        auto groupInstancePtr = std::make_shared<group>(instance->getName());
+        for (const auto& element : instance->inside().getKeys()) {
+            /* get the element from the group instance */
+            auto elementPtr = instance->inside().get(element);
+            /* add the element to the group instance */
+            if (elementPtr) groupInstancePtr->inside().add(element, elementPtr->clone());
+            else Exception::Throw::Invalid(element, "Exception::NULL_ELEMENT");
         }
         /* add the child groups to the group instance */
-        auto children = groupIns->getChildren();
+        auto children = groupInstancePtr->getChildren();
         /* return the group instance if no children */
-        if (children.empty()) return groupInstance;
+        if (children.empty()) return groupInstancePtr;
         /* add the children to the group instance */
-        for (const auto& child : children) groupInstance->add(__cloneGroupInstance(child));
-        return groupInstance;
+        for (const auto& child : children) groupInstancePtr->add(__cloneGroupInstance(child));
+        return instance;
     }
 } // namespace treecode

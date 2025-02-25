@@ -46,39 +46,19 @@
 
 namespace tc {
     /**
-     * @brief Alias for the variant type.
-     */
-    
-
-    
-
-    /**
      * @class base
      * @brief Represents the base element with a label, description, type, and optional constraints.
      */
     class base {
         
     public:
-        using type = std::variant<bool, std::string, char, int, long int, float, double>;
         /**
          * @brief Destructor for the base class.
          */
         virtual ~base() = default;
 
 
-        /**
-         * @brief Sets the value of the element.
-         * @param newValue The new value to set.
-         */
-        virtual void set(const type& newValue) = 0;
-
-
-        /**
-         * @brief Gets the value of the element.
-         * @return The value of the element.
-         */
-        virtual std::optional<type> data() const = 0;
-
+        virtual std::shared_ptr<base> clone() const = 0;
 
         /**
          * @brief Checks if the element is required.
@@ -93,10 +73,6 @@ namespace tc {
          */
         virtual void setReq() = 0;
     };
-    /**
-     * @brief Alias for the multi type.
-     */
-    using multi = std::vector<tc::base::type>;
 } // namespace tc
 
 #endif // BASE_H

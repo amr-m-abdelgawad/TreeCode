@@ -43,71 +43,17 @@
 #include "includes/container.hpp"
 
 namespace tc {
-    /**
-     * @brief Adds an element to the container with the specified key.
-     * @param key The key associated with the element to be added.
-     * @param element The pointer of the element to be added to the container.
-     * @throws std::invalid_argument if the key already exists in the container.
-     */
-    std::shared_ptr<base> container::add(
-        const std::string& key 
-    ) {
-        auto elementPtr = std::make_shared<element>();
-        /* try to add the element to the container */
-        auto result = this->__elements.try_emplace(key, elementPtr);
-        /* throw an exception if the key already exists */
-        if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
-        /* add the key to the list of keys */
-        this->__keys.emplace_back(key);
-
-        return elementPtr;
-    }
-
-
     std::shared_ptr<base> container::add(
         const std::string& key,
-        const base::type& defaultValue
+        const std::shared_ptr<base>& ptr
     ) {
-        auto elementPtr = std::make_shared<element>(defaultValue);
         /* try to add the element to the container */
-        auto result = this->__elements.try_emplace(key, elementPtr);
+        auto result = this->__elements.try_emplace(key, ptr);
         /* throw an exception if the key already exists */
         if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
         /* add the key to the list of keys */
         this->__keys.emplace_back(key);
-
-        return elementPtr;
-    }
-
-
-    std::shared_ptr<base> container::add(
-        const std::string& key,
-        const multi& choices
-    ) {
-        auto elementPtr = std::make_shared<element>(choices);
-        /* try to add the element to the container */
-        auto result = this->__elements.try_emplace(key, elementPtr);
-        /* throw an exception if the key already exists */
-        if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
-        /* add the key to the list of keys */
-        this->__keys.emplace_back(key);
-
-        return elementPtr;
-    }
-
-
-    std::shared_ptr<base> container::add(
-        const std::string& key,
-        const std::shared_ptr<base>& elementPtr
-    ) {
-        /* try to add the element to the container */
-        auto result = this->__elements.try_emplace(key, elementPtr);
-        /* throw an exception if the key already exists */
-        if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
-        /* add the key to the list of keys */
-        this->__keys.emplace_back(key);
-
-        return elementPtr;
+        return ptr;
     }
 
 

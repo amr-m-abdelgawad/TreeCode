@@ -88,7 +88,7 @@ namespace tc {
          * @brief Method to create an instance of the template.
          * @return An instance of the template.
          */
-        std::shared_ptr<group> createInstance() const;
+        std::shared_ptr<group> clone() const;
 
         /**
          * @brief Method to create an instance of a group.
@@ -106,11 +106,13 @@ namespace tc {
          */
         std::string __name;
 
+
         /**
          * @var std::vector<std::shared_ptr<group>> groupTemplate::__groups
          * The groups in the template.
          */
         std::vector<std::shared_ptr<group>> __groups;
+
 
         /**
          * @brief Method to clone a group instance.
@@ -118,7 +120,7 @@ namespace tc {
          * @return The cloned group instance.
          */
         std::shared_ptr<group> __cloneGroupInstance(
-            std::shared_ptr<group> groupIns
+            const std::shared_ptr<group>& instance
         ) const;
     };
 } // namespace treecode

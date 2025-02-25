@@ -1,20 +1,20 @@
 #include <treecode.hpp>
 #include <iostream>
 #include "includes/print.hpp"
-
+#include <variant>
 
 void printTree(const tc::group& group, int indent = 0, bool lastChild = true, std::string parentIndentStr = "") {
     std::string indentStr = parentIndentStr;
     std::string label = "ROOT: ";
     
     // Prepare indentation for the current group
-    if (indent == 0)label = "ROOT: ";
+    if (indent == 0) label = "ROOT: ";
     else if (indent > 0) {
         std::cout << indentStr + "|   " << std::endl;
         indentStr += (lastChild ? "+-- " : "|-- ");
         label = "CHILD: ";
     }
-    std::cout << indentStr <<label<< group.getName() << std::endl;
+    std::cout << indentStr << label << group.getName() << std::endl;
 
     // Get keys and children
     auto keys = group.inside().getKeys();
@@ -27,16 +27,24 @@ void printTree(const tc::group& group, int indent = 0, bool lastChild = true, st
     // Print elements
     for (size_t i = 0; i < numKeys; ++i) {
         try {
-            auto element = group.inside().get(keys[i]);
+            auto baseElement = group.inside().get(keys[i]);
             bool isLastElement = (i == numKeys - 1 && numChildren == 0);
             std::cout << nextIndentStr << (isLastElement ? "+-- " : "|-- ");
-            auto required = element->isReq() ? " (Required)" : " (Optional)";
-            if (element->data()) {
-                std::visit([&](auto&& value) {
-                    std::cout << keys[i] << " ==> Value: " << value << required << std::endl;
-                }, element->data().value());
+            auto required = baseElement->isReq() ? " (Required)" : " (Optional)";
+
+            // Attempt to cast to element<T> and print the value
+            if (auto stringElement = std::dynamic_pointer_cast<tc::element<std::string>>(baseElement)) {
+                std::cout << keys[i] << " ==> Value: " << stringElement->data().value_or("none") << required << std::endl;
+            } else if (auto intElement = std::dynamic_pointer_cast<tc::element<int>>(baseElement)) {
+                std::cout << keys[i] << " ==> Value: " << intElement->data().value_or(0) << required << std::endl;
+            } else if (auto floatElement = std::dynamic_pointer_cast<tc::element<float>>(baseElement)) {
+                std::cout << keys[i] << " ==> Value: " << floatElement->data().value_or(0.0f) << required << std::endl;
+            } else if (auto doubleElement = std::dynamic_pointer_cast<tc::element<double>>(baseElement)) {
+                std::cout << keys[i] << " ==> Value: " << doubleElement->data().value_or(0.0) << required << std::endl;
+            } else if (auto doubleElement = std::dynamic_pointer_cast<tc::element<bool>>(baseElement)) {
+                std::cout << keys[i] << " ==> Value: " << doubleElement->data().value_or(0.0) << required << std::endl;
             } else {
-                std::cout << keys[i] << " ==> Value: none" << required << std::endl;
+                std::cout << keys[i] << " ==> Value: unknown type" << required << std::endl;
             }
         } catch (const std::exception& e) {
             std::cerr << nextIndentStr << "Error: " << e.what() << std::endl;
