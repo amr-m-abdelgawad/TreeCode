@@ -1,11 +1,11 @@
-# tc Project
+# TreeCode Project
 
 ![Build Status](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/CMake-Build.yml/badge.svg)
 [![CodeQL](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/codeql.yml/badge.svg?branch=main)](https://github.com/amr-m-abdelgawad/TreeCode/actions/workflows/codeql.yml)
 ![GitHub License](https://img.shields.io/github/license/amr-m-abdelgawad/TreeCode)
 ![Static Badge](https://img.shields.io/badge/%40-Amr_MOUSA_2025-blue)
 
-tc is a C++ library for managing hierarchical data structures. It includes classes for containers, elements, groups, templates, and logging. The library can be built as a shared library and includes options for building tests and examples.
+TreeCode is a C++ library for managing hierarchical data structures. It includes classes for containers, elements, groups, templates, and logging. The library can be built as a shared library and includes options for building tests and examples.
 
 ## Features
 - Efficient tree traversal algorithms
@@ -24,7 +24,7 @@ cmake --build build --config Release
 ```
 
 ## Usage
-Here is an example of how to use the tc library:
+Here is an example of how to use the TreeCode library:
 ```cpp
 #include "core/includes/group.hpp"
 #include "core/includes/template.hpp"
@@ -66,7 +66,7 @@ int main() {
 ```
 
 ## Examples
-The repository includes several examples demonstrating how to use the treecode library. You can find them in the `examples` directory. To build and run the examples, use the following commands:
+The repository includes several examples demonstrating how to use the TreeCode library. You can find them in the `examples` directory. To build and run the examples, use the following commands:
 ```bash
 cmake -B build -DBUILD_EXAMPLES=ON
 cmake --build build --config Release
