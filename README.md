@@ -26,9 +26,7 @@ cmake --build build --config Release
 ## Usage
 Here is an example of how to use the TreeCode library:
 ```cpp
-#include "core/includes/group.hpp"
-#include "core/includes/template.hpp"
-#include "includes/print.hpp"
+#include <treecode.hpp>
 
 tc::tmpl create_tmpl() {
     auto tmpl = tc::tmpl("ExampleTemplate");
@@ -56,8 +54,6 @@ int main() {
         auto childInstance = tmpl.clone("Child");
         childInstance->inside().get<std::string>("name")->set("ChildName");
         instance->add(childInstance);
-
-        print(rootGroup);
     } catch (const std::exception& e) {
         std::cerr << "[Error] " << e.what() << std::endl;
     }
