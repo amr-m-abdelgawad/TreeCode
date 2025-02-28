@@ -13,7 +13,7 @@
  * Version 0.0.1
  * 
  * This project is a C++ library for managing hierarchical data
- * structures. It includes classes for containers, elements, groups, templates,
+ * structures. It includes classes for containers, items, groups, templates,
  * and logging. The library can be built as a shared library and includes options
  * for building tests and examples.
  * 
@@ -25,7 +25,7 @@
  * @ingroup Core
  * 
  * This file contains the implementation of the container class, 
- * which is used to store elements in a key-value format.
+ * which is used to store items in a key-value format.
  * 
  * @version Version 0.0.1
  * @author Amr MOUSA - https://github.com/amr-m-abdelgawad
@@ -42,57 +42,84 @@
 /**
  * @brief Include necessary headers
  */
-#include "element.hpp"
+#include "item.hpp"
 
-namespace tc {
+namespace treecode {
     /**
      * @class container
-     * @brief Represents a container for storing elements in a key-value format.
-     * 
-     * The container class provides functionality to store and manage elements in a key-value format.
-     * It supports adding elements to the container, retrieving elements by key, and getting a list of keys.
-     * The class also supports serialization to and from JSON.
+     * @brief Represents a container for storing items in a key-value format.
      */
     class container {
     public:
         /**
-         * @brief Adds an element to the container with the specified key.
-         * @param key The key associated with the element to be added.
-         * @param element The pointer of the element to be added to the container.
-         * @throws std::invalid_argument if the key already exists in the container.
+         * @brief Default constructor for the container class.
+         */
+        container() = default;
+
+
+        /**
+         * @brief Destructor for the container class.
+         */
+        ~container() = default;
+
+
+        /**
+         * @brief Adds an item to the container.
+         * @param key The key for the item.
+         * @return A shared pointer to the added item.
          */
         template <typename T>
-        std::shared_ptr<element<T>> add(
+        std::shared_ptr<item<T>> add(
             const std::string& key
         );
 
+
+        /**
+         * @brief Adds an item to the container with a value.
+         * @param key The key for the item.
+         * @param value The value for the item.
+         * @return A shared pointer to the added item.
+         */
         template <typename T>
-        std::shared_ptr<element<T>> add(
+        std::shared_ptr<item<T>> add(
             const std::string& key,
             const T& value
         );
-    
+
+
+        /**
+         * @brief Adds an item to the container with multi choice values.
+         * @param key The key for the item.
+         * @param choices The multi choice values for the item.
+         * @return A shared pointer to the added item.
+         */
         template <typename T>
-        std::shared_ptr<element<T>> add(
+        std::shared_ptr<item<T>> add(
             const std::string& key,
             const std::vector<T>& choices
         );
 
-        // template <typename T>
+
+        /**
+         * @brief Adds an item to the container.
+         * @param key The key for the item.
+         * @param ptr A shared pointer to the item.
+         * @return A shared pointer to the added item.
+         */
         std::shared_ptr<base> add(
             const std::string& key,
             const std::shared_ptr<base>& ptr
         );
 
+
         /**
-         * This method is overloaded to allow for getting elements by key
+         * This method is overloaded to allow for getting items by key
          * for both constant and non-constant containers.
          */
         /**
-         * @brief Gets the element with the specified key from the container.
-         * @param key The key of the element to retrieve.
-         * @return pointer to the element with the specified key.
-         * @throws std::out_of_range if the key is not found in the container.
+         * @brief Gets an base item from the container.
+         * @param key The key for the item.
+         * @return A shared pointer to the base.
          */
         /* non-constant version of the method */
         std::shared_ptr<base>& get(
@@ -104,110 +131,153 @@ namespace tc {
             const std::string& key
         ) const;
 
+
+        /**
+         * This method is overloaded to allow for getting items by key
+         * for both constant and non-constant containers.
+         */
+        /**
+         * @brief Gets an item from the container.
+         * @param key The key for the item.
+         * @return A shared pointer to the item.
+         */
+        /* non-constant version of the method */
         template <typename T>
-        std::shared_ptr<element<T>> get(
+        std::shared_ptr<item<T>> get(
             const std::string& key
         );
 
+        /* constant version of the method */
         template <typename T>
-        std::shared_ptr<element<T>> get(
+        std::shared_ptr<item<T>> get(
             const std::string& key
         ) const;
 
-        /**
-         * @brief Gets the keys of the elements in the container.
-         * @return A vector of keys in the container.
-         */
-        std::vector<std::string> getKeys() const;
 
+        /**
+         * @brief Gets the keys of the container.
+         * @return A vector of keys.
+         */
+        std::vector<std::string> keys() const;
+
+
+        /**
+         * @brief Checks if an item exists in the container.
+         * @param key The key of the item.
+         * @return True if the item exists, false otherwise.
+         */
+        bool exists(const std::string& key) const;
+
+
+        /**
+         * @brief Removes an item from the container.
+         * @param key The key of the item to remove.
+         */
+        bool remove(const std::string& key);
 
     private:
         /**
-         * @var std::unordered_map<std::string, element> container::__elements
-         * The elements stored in the container.
+         * @var std::unordered_map<std::string, std::shared_ptr<base>> container::__items
+         * The items of the container.
          */
-        std::unordered_map<std::string, std::shared_ptr<base>> __elements;
-
+        std::unordered_map<std::string, std::shared_ptr<base>> __items;
 
         /**
          * @var std::vector<std::string> container::__keys
-         * The keys of the elements in the container.
+         * The keys of the container.
          */
         std::vector<std::string> __keys;
     };
 
 
     /**
-     * @brief Adds an element to the container with the specified key.
-     * @param key The key associated with the element to be added.
-     * @param element The pointer of the element to be added to the container.
-     * @throws std::invalid_argument if the key already exists in the container.
+     * @brief Adds an item to the container.
+     * @param key The key for the item.
+     * @return A shared pointer to the added item.
      */
     template <typename T>
-    std::shared_ptr<element<T>> container::add(
+    std::shared_ptr<item<T>> container::add(
         const std::string& key 
     ) {
-        auto elementPtr = std::make_shared<element<T>>();
-        /* try to add the element to the container */
-        auto result = this->__elements.try_emplace(key, elementPtr);
+        auto itemPtr = std::make_shared<item<T>>();
+        /* try to add the item to the container */
+        auto result = this->__items.try_emplace(key, itemPtr);
         /* throw an exception if the key already exists */
         if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
         /* add the key to the list of keys */
         this->__keys.emplace_back(key);
-        return elementPtr;
+        return itemPtr;
     }
 
 
+    /**
+     * @brief Adds an item to the container with a value.
+     * @param key The key for the item.
+     * @param value The value for the item.
+     * @return A shared pointer to the added item.
+     */
     template <typename T>
-    std::shared_ptr<element<T>> container::add(
+    std::shared_ptr<item<T>> container::add(
         const std::string& key,
         const T& value
     ) {
-        auto elementPtr = std::make_shared<element<T>>(value);
-        /* try to add the element to the container */
-        auto result = this->__elements.try_emplace(key, elementPtr);
+        auto itemPtr = std::make_shared<item<T>>(value);
+        /* try to add the item to the container */
+        auto result = this->__items.try_emplace(key, itemPtr);
         /* throw an exception if the key already exists */
         if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
         /* add the key to the list of keys */
         this->__keys.emplace_back(key);
 
-        return elementPtr;
+        return itemPtr;
     }
 
 
+    /**
+     * @brief Adds an item to the container with multi choice values.
+     * @param key The key for the item.
+     * @param choices The multi choice values for the item.
+     * @return A shared pointer to the added item.
+     */
     template <typename T>
-    std::shared_ptr<element<T>> container::add(
+    std::shared_ptr<item<T>> container::add(
         const std::string& key,
         const std::vector<T>& choices
     ) {
-        auto elementPtr = std::make_shared<element<T>>(choices);
-        /* try to add the element to the container */
-        auto result = this->__elements.try_emplace(key, elementPtr);
+        auto itemPtr = std::make_shared<item<T>>(choices);
+        /* try to add the item to the container */
+        auto result = this->__items.try_emplace(key, itemPtr);
         /* throw an exception if the key already exists */
         if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
         /* add the key to the list of keys */
         this->__keys.emplace_back(key);
 
-        return elementPtr;
+        return itemPtr;
     }
 
 
+    /**
+     * @brief Adds an item to the container.
+     * @param key The key for the item.
+     * @param ptr A shared pointer to the item.
+     * @return A shared pointer to the added item.
+     */
     /* non-constant version of the method */
     template <typename T>
-    std::shared_ptr<element<T>> container::get(
+    std::shared_ptr<item<T>> container::get(
         const std::string& key
     ) { 
         auto basePtr = get(key);
-        return std::dynamic_pointer_cast<element<T>>(basePtr);
+        return std::dynamic_pointer_cast<item<T>>(basePtr);
     }
 
     /* constant version of the method */
     template <typename T>
-    std::shared_ptr<element<T>> container::get(
-            const std::string& key
+    std::shared_ptr<item<T>> container::get(
+        const std::string& key
     ) const { 
         auto basePtr = get(key);
-        return std::dynamic_pointer_cast<element<T>>(basePtr);
+        return std::dynamic_pointer_cast<item<T>>(basePtr);
     }
 } // namespace treecode
 

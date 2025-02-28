@@ -13,7 +13,7 @@
  * Version 0.0.1
  * 
  * This project is a C++ library for managing hierarchical data
- * structures. It includes classes for containers, elements, groups, templates,
+ * structures. It includes classes for containers, items, groups, templates,
  * and logging. The library can be built as a shared library and includes options
  * for building tests and examples.
  * 
@@ -25,7 +25,7 @@
  * @ingroup Core
  * 
  * This file contains the definition of the base class, which is used to represent
- * the base element with a label, description, type, and optional constraints.
+ * the base item with a label, description, type, and optional constraints.
  * 
  * @version 0.0.1
  * @author Amr MOUSA
@@ -44,10 +44,11 @@
  */
 #include "common.hpp"
 
-namespace tc {
+
+namespace treecode {
     /**
      * @class base
-     * @brief Represents the base element with a label, description, type, and optional constraints.
+     * @brief Represents the base item with a label, description, type, and optional constraints.
      */
     class base {
         
@@ -58,21 +59,26 @@ namespace tc {
         virtual ~base() = default;
 
 
+        /**
+         * @brief Clone the base.
+         * @return A shared pointer to the cloned base.
+         */
         virtual std::shared_ptr<base> clone() const = 0;
 
+
         /**
-         * @brief Checks if the element is required.
-         * @return True if the element is required, false otherwise.
+         * @brief Checks if the base is required.
+         * @return True if the base is required, false otherwise.
          */
-        virtual bool isReq() const = 0;
+        virtual bool is_required() const = 0;
 
 
         /**
-         * @brief Sets the element as required.
+         * @brief Sets the base as required.
          * @return void
          */
-        virtual void setReq() = 0;
+        virtual void required() = 0;
     };
-} // namespace tc
+} // namespace treecode
 
 #endif // BASE_H

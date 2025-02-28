@@ -13,13 +13,13 @@
  * Version 0.0.1
  * 
  * This project is a C++ library for managing hierarchical data
- * structures. It includes classes for containers, elements, groups, templates,
+ * structures. It includes classes for containers, items, groups, templates,
  * and logging. The library can be built as a shared library and includes options
  * for building tests and examples.
  * 
  * +--------------------------------------------------------------------------+
  * 
- * @file template.cpp
+ * @file tmpl.cpp
  * @class tmpl
  * @brief Implementation file for the tmpl class.
  * @ingroup Core
@@ -40,9 +40,9 @@
 /**
  * @brief Include necessary headers
  */
-#include "includes/template.hpp"
+#include "includes/tmpl.hpp"
 
-namespace tc {
+namespace treecode {
     /**
      * @brief Constructor for the tmpl class.
      * @param name The name of the template.
@@ -59,10 +59,20 @@ namespace tc {
      * Adds the specified group to the template.
      */
     void tmpl::add(
-        const std::shared_ptr<group>& groupPtr
+        const std::shared_ptr<group>& grp
     ) {
         /* add the group to the list of groups */
-        if (groupPtr) this->__groups.emplace_back(groupPtr);
+        if (grp) this->__groups.emplace_back(grp);
+        else Exception::Throw::Invalid(this->__name, Exception::NULL_GROUP);
+    }
+
+
+    void tmpl::add(
+        const group& grp
+    ) {
+        std::shared_ptr<group> group_ptr = std::make_shared<group>(grp);
+        /* add the group to the list of groups */
+        if (group_ptr) this->__groups.emplace_back(group_ptr);
         else Exception::Throw::Invalid(this->__name, Exception::NULL_GROUP);
     }
 
@@ -71,30 +81,31 @@ namespace tc {
      * @brief Method to get the name of the template.
      * @return The name of the template.
      */
-    std::string tmpl::getName() const { return this->__name; }
+    std::string tmpl::name() const { return this->__name; }
 
 
     /**
      * @brief Method to get the groups in the template.
      * @return The groups in the template.
      */
-    const std::vector<std::shared_ptr<group>>& tmpl::getGroups() const { return this->__groups; }
+    const std::vector<std::shared_ptr<group>>& tmpl::groups() const { return this->__groups; }
 
 
     /**
      * @brief Method to create an instance of the template.
      * @return The created instance of the template.
      */
-    std::shared_ptr<group> tmpl::clone() const {
-        /* create an instance of the template */
-        auto instance = std::make_shared<group>(this->__name);
+    group tmpl::clone() const {
+        auto instance = std::make_shared<group>(group(this->__name));
         /* add the groups to the instance */
-        for (const auto& group : this->__groups) {
+        for (const auto& grp : this->__groups) {
             /* clone the group instance and add it to the instance */
-            if (group) instance->add(__cloneGroupInstance(group));
-            else Exception::Throw::Invalid(this->__name, Exception::NULL_GROUP);
+            if (grp) {
+                
+                grp->add(__clone_group(instance));
+            } else Exception::Throw::Invalid(this->__name, Exception::NULL_GROUP);
         }
-        return instance;
+        return *instance;
     }
 
 
@@ -103,7 +114,7 @@ namespace tc {
      * @param groupName The name of the group to create an instance of.
      * @return The created instance of the group.
      */
-    std::shared_ptr<group> tmpl::clone(
+    group tmpl::clone(
         const std::string& name
     ) const {
         /* find the group in the template */
@@ -111,16 +122,17 @@ namespace tc {
             const std::shared_ptr<group>& grp
         ) {
             /* return the group if found */
-            return grp->getName() == name;
+            return grp->name() == name;
         });
+
 
         /* create an instance of the group if found */
         if (it != this->__groups.end())  {
-            return __cloneGroupInstance(*it);
+            return __clone_group(*it);
         }
         /* throw an exception if the group was not found */
         else {
-            return nullptr;
+            return group();
             Exception::Throw::Invalid(name, Exception::TEMPLATE_GROUP_NOT_FOUND);
         }
         
@@ -132,24 +144,24 @@ namespace tc {
      * @param groupIns The group instance to clone.
      * @return The cloned group instance.
      */
-    std::shared_ptr<group> tmpl::__cloneGroupInstance(
-        const std::shared_ptr<group>& instance
+    group tmpl::__clone_group(
+        const std::shared_ptr<group>& grp
     ) const {
         /* create a new group instance */
-        auto groupInstancePtr = std::make_shared<group>(instance->getName());
-        for (const auto& element : instance->inside().getKeys()) {
-            /* get the element from the group instance */
-            auto elementPtr = instance->inside().get(element);
-            /* add the element to the group instance */
-            if (elementPtr) groupInstancePtr->inside().add(element, elementPtr->clone());
-            else Exception::Throw::Invalid(element, "Exception::NULL_ELEMENT");
+        auto group_instance = std::make_shared<group>(grp->name());
+        for (const auto& item : grp->items().keys()) {
+            /* get the item from the group instance */
+            auto itemPtr = grp->items().get(item);
+            /* add the item to the group instance */
+            if (itemPtr) group_instance->items().add(item, itemPtr->clone());
+            else Exception::Throw::Invalid(item, "Exception::NULL_ELEMENT");
         }
         /* add the child groups to the group instance */
-        auto children = groupInstancePtr->getChildren();
+        auto children = group_instance->children();
         /* return the group instance if no children */
-        if (children.empty()) return groupInstancePtr;
+        if (children.empty()) return *group_instance;
         /* add the children to the group instance */
-        for (const auto& child : children) groupInstancePtr->add(__cloneGroupInstance(child));
-        return instance;
+        for (const auto& child : children) group_instance->add(__clone_group(child));
+        return *group_instance;
     }
 } // namespace treecode

@@ -13,7 +13,7 @@
  * Version 0.0.1
  * 
  * This project is a C++ library for managing hierarchical data
- * structures. It includes classes for containers, elements, groups, templates,
+ * structures. It includes classes for containers, items, groups, templates,
  * and logging. The library can be built as a shared library and includes options
  * for building tests and examples.
  * 
@@ -43,7 +43,7 @@
  */
 #include "common.hpp"
 
-namespace tc {
+namespace treecode {
     /**
      * @namespace Exception
      * @brief Contains exception messages used throughout the library.
@@ -60,12 +60,12 @@ namespace tc {
     
     
         /* Element Errors */
-        const std::string ELEMENT_INVALID_TYPE = "The element type is invalid.";
+        const std::string ELEMENT_INVALID_TYPE = "The item type is invalid.";
         const std::string ELEMENT_WRONG_MULTIVALUES_CONSTRUCTOR = "Incorrect constructor used for multivalues type.";
         const std::string ELEMENT_MULTIVALUES_ALLOWED_MISSING = "Allowed values can only be set for multivalues type.";
         const std::string ELEMENT_WRONG_TYPE_FOR_MULTIVALUES = "Allowed values are only applicable for multivalues type.";
         const std::string ELEMENT_VALUE_NOT_ALLOWED = "The value is not in the allowed values list.";
-        const std::string ELEMENT_TYPE_UNKNOWN = "The element type is unknown.";
+        const std::string ELEMENT_TYPE_UNKNOWN = "The item type is unknown.";
         const std::string ELEMENT_ALLOWED_VALUES_EMPTY = "The allowed values list is empty.";
     
     
@@ -80,7 +80,7 @@ namespace tc {
         struct Throw {
             /**
              * @brief Throws an invalid argument exception with the specified label and message.
-             * @param label The label of the element.
+             * @param label The label of the item.
              * @param message The message to include in the exception.
              * @throws std::invalid_argument
              */
@@ -96,7 +96,7 @@ namespace tc {
 
             /**
              * @brief Throws a runtime error with the specified label and message.
-             * @param label The label of the element.
+             * @param label The label of the item.
              * @param message The message to include in the exception.
              * @throws std::runtime_error
              */
@@ -112,7 +112,7 @@ namespace tc {
 
             /**
              * @brief Throws a logic error with the specified label and message.
-             * @param label The label of the element.
+             * @param label The label of the item.
              * @param message The message to include in the exception.
              * @throws std::logic_error
              */
@@ -128,7 +128,7 @@ namespace tc {
 
             /**
              * @brief Throws a domain error with the specified label and message.
-             * @param label The label of the element.
+             * @param label The label of the item.
              * @param message The message to include in the exception.
              * @throws std::domain_error
              */
@@ -144,7 +144,7 @@ namespace tc {
 
             /**
              * @brief Throws an overflow error with the specified label and message.
-             * @param label The label of the element.
+             * @param label The label of the item.
              * @param message The message to include in the exception.
              * @throws std::overflow_error
              */
@@ -160,7 +160,7 @@ namespace tc {
 
             /**
              * @brief Throws an underflow error with the specified label and message.
-             * @param label The label of the element.
+             * @param label The label of the item.
              * @param message The message to include in the exception.
              * @throws std::underflow_error
              */

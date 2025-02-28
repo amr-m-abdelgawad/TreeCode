@@ -13,7 +13,7 @@
  * Version 0.0.1
  * 
  * This project is a C++ library for managing hierarchical data
- * structures. It includes classes for containers, elements, groups, templates,
+ * structures. It includes classes for containers, items, groups, templates,
  * and logging. The library can be built as a shared library and includes options
  * for building tests and examples.
  * 
@@ -42,7 +42,7 @@
 */
 #include "includes/group.hpp"
 
-namespace tc {
+namespace treecode {
     /**
      * @brief Constructor for the group class.
      * @param name The name of the group.
@@ -64,6 +64,15 @@ namespace tc {
             this->__children.emplace_back(child);
     }
 
+    void group::add(
+        const group& child
+    ) {
+        std::shared_ptr<group> childPtr = std::make_shared<group>(child);
+        /* add the child to the list of children */
+        if (std::find(this->__children.begin(), this->__children.end(), childPtr) == this->__children.end())
+            this->__children.emplace_back(childPtr);
+    }
+
     /**
      * @brief Removes a child group from the current group.
      * @param child The child group to remove.
@@ -82,20 +91,20 @@ namespace tc {
      * @brief Gets the container of the group.
      * @return The container of the group.
      */
-    container& group::inside() { return this->__container; }
+    container& group::items() { return this->__container; }
 
-    const container& group::inside() const { return this->__container; }
+    const container& group::items() const { return this->__container; }
     
 
     /**
      * @brief Gets the name of the group.
      * @return The name of the group.
      */
-    std::string group::getName() const { return this->__name; }
+    std::string group::name() const { return this->__name; }
 
     /**
      * @brief Gets the child groups of the current group.
      * @return A vector of shared pointers to the child groups.
      */
-    const std::vector<std::shared_ptr<group>>& group::getChildren() const { return this->__children; }
+    const std::vector<std::shared_ptr<group>>& group::children() const { return this->__children; }
 } // namespace treecode

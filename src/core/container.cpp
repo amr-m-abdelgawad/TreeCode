@@ -13,7 +13,7 @@
  * Version 0.0.1
  * 
  * This project is a C++ library for managing hierarchical data
- * structures. It includes classes for containers, elements, groups, templates,
+ * structures. It includes classes for containers, items, groups, templates,
  * and logging. The library can be built as a shared library and includes options
  * for building tests and examples.
  * 
@@ -25,7 +25,7 @@
  * @ingroup Core
  * 
  * This file contains the implementation of the container class, 
- * which is used to store elements in a key-value format.
+ * which is used to store items in a key-value format.
  * 
  * @version Version 0.0.1
  * @author Amr MOUSA - https://github.com/amr-m-abdelgawad
@@ -42,13 +42,13 @@
 */
 #include "includes/container.hpp"
 
-namespace tc {
+namespace treecode {
     std::shared_ptr<base> container::add(
         const std::string& key,
         const std::shared_ptr<base>& ptr
     ) {
-        /* try to add the element to the container */
-        auto result = this->__elements.try_emplace(key, ptr);
+        /* try to add the item to the container */
+        auto result = this->__items.try_emplace(key, ptr);
         /* throw an exception if the key already exists */
         if (!result.second) Exception::Throw::Invalid(key, Exception::CONTAINER_KEY_ALREADY_EXISTS);
         /* add the key to the list of keys */
@@ -58,20 +58,20 @@ namespace tc {
 
 
     /**
-     * This method is overloaded to allow for getting elements by key
+     * This method is overloaded to allow for getting items by key
      * for both constant and non-constant containers.
      */
     /**
-     * @brief Gets the element with the specified key from the container.
-     * @param key The key of the element to retrieve.
-     * @return Pointer to the element with the specified key.
+     * @brief Gets the item with the specified key from the container.
+     * @param key The key of the item to retrieve.
+     * @return Pointer to the item with the specified key.
      * @throws std::out_of_range if the key is not found in the container.
      */
     #define GET_ELEMENT_IMPL() \
-        /* find the element with the specified key */ \
-        auto it = this->__elements.find(key); \
-        /* return the element if found */ \
-        if (it != this->__elements.end()) return it->second; \
+        /* find the item with the specified key */ \
+        auto it = this->__items.find(key); \
+        /* return the item if found */ \
+        if (it != this->__items.end()) return it->second; \
         /* throw an exception if the key is not found */ \
         Exception::Throw::Range(key, Exception::CONTAINER_KEY_NOT_FOUND); \
         throw std::runtime_error("Unreachable code"); /* unreachable code */
@@ -93,13 +93,44 @@ namespace tc {
 
 
     /**
-     * @brief Gets the keys of the elements in the container.
+     * @brief Gets the keys of the items in the container.
      * @return A vector of keys in the container.
      */
-    std::vector<std::string> container::getKeys() const {
+    std::vector<std::string> container::keys() const {
         /* return an empty vector if the container is empty */
         if(this->__keys.empty()) return {};
         /* return the keys */
         return this->__keys;
+    }
+
+
+    /**
+     * @brief Checks if an item with the specified key exists in the container.
+     * @param key The key to check for existence.
+     * @return True if the key exists in the container, false otherwise.
+     */
+    bool container::exists(const std::string& key) const {
+        return this->__items.count(key) > 0;
+    }
+
+
+    /**
+     * @brief Removes an item from the container.
+     *        Does not throw an exception if the key is not found.
+     * @param key The key of the item to remove.
+     * @return True if the item was removed, false otherwise.
+     */
+    bool container::remove(const std::string& key) {
+        /* find the item with the specified key */
+        auto it = this->__items.find(key);
+        /* remove the item if found */
+        if (it != this->__items.end()) {
+            this->__items.erase(it);
+            /* remove the key from the list of keys */
+            this->__keys.erase(
+                std::remove(this->__keys.begin(), this->__keys.end(), key), this->__keys.end()
+            );
+            return true;
+        } else return false;
     }
 } // namespace treecode

@@ -13,7 +13,7 @@
  * Version 0.0.1
  * 
  * This project is a C++ library for managing hierarchical data
- * structures. It includes classes for containers, elements, groups, templates,
+ * structures. It includes classes for containers, items, groups, templates,
  * and logging. The library can be built as a shared library and includes options
  * for building tests and examples.
  * 
@@ -50,5 +50,10 @@
 #include <sstream>
 #include <optional>
 #include "exception.hpp"
+
+#define TREECODE_VERSION    0.0.1
+#define TREECODE_COPYRIGHT  Copyright (c) - Amr MOUSA 2025
+#define TREECODE_LICENSE    Licensed under the MIT License <http://opensource.org/licenses/MIT>
+#define TREECODE_PROJECT    TREECODE
 
 #endif // COMMON_H

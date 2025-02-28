@@ -2,27 +2,27 @@
 #include <iostream>
 #include "includes/print.hpp"
 
-tc::tmpl create_tmpl() {
+treecode::tmpl create_tmpl() {
 
     // Create a template for did and element
-    auto tmpl = tc::tmpl("Did_Tmpl");
+    auto tmpl = treecode::tmpl("Did_Tmpl");
 
     // Create DID group
-    auto did_group = tc::group("DID");
-    did_group.inside().add<std::string>("ID");
-    did_group.inside().add<std::string>("TYPE",{"NORMAL","EXTENDED"});
+    auto did_group = treecode::group("DID");
+    did_group.items().add<std::string>("ID");
+    did_group.items().add<std::string>("TYPE",{"NORMAL","EXTENDED"});
     
     // Create ELEMENT group
-    auto ele_group = tc::group("ELEMENT");
-    ele_group.inside().add<std::string>("NAME")->setReq();
-    ele_group.inside().add<std::string>("TYPE", {"uint8", "uint16"});
-    ele_group.inside().add<int>("VALUE",0);
-    ele_group.inside().add<bool>("SHARED",false)->setReq();
+    auto ele_group = treecode::group("ELEMENT");
+    ele_group.items().add<std::string>("NAME")->required();
+    ele_group.items().add<std::string>("TYPE", {"uint8", "uint16"});
+    ele_group.items().add<int>("VALUE",0);
+    ele_group.items().add<bool>("SHARED",false)->required();
 
 
     // Add DID & ELEMENT to the "DidTmpl" template
-    tmpl.add(std::make_shared<tc::group>(did_group));
-    tmpl.add(std::make_shared<tc::group>(ele_group));
+    tmpl.add(did_group);
+    tmpl.add(ele_group);
 
     return tmpl;
 }
@@ -32,57 +32,81 @@ int main() {
         // Create a template for did and element
         auto tmpl = create_tmpl();
         // Create a root group for the DID LIST
-        auto did_tree = tc::group("DID TREE");
+        auto did_tree = treecode::group("DID TREE");
 
-        std::shared_ptr<tc::group> did;
-        std::shared_ptr<tc::group> elem;
+        treecode::group did;
+        treecode::group elem;
 
         // Modify instance1 of DID
         did = tmpl.clone("DID");
-        did->inside().get<std::string>("ID")->set("FD09");
+        did.items().get<std::string>("ID")->value("FD09");
         // Add elements to the DID
         elem = tmpl.clone("ELEMENT");
-        elem->inside().get<std::string>("NAME")->set("Interface1");
-        did->add(elem);
+        elem.items().get<std::string>("NAME")->value("Interface1");
+        did.add(elem);
         // Add elements to the DID
         elem = tmpl.clone("ELEMENT");
-        elem->inside().get<std::string>("NAME")->set("Interface2");
-        elem->inside().get<std::string>("TYPE")->set("uint16");
-        elem->inside().get<int>("VALUE")->set(350);
-        did->add(elem);
+        elem.items().get<std::string>("NAME")->value("Interface2");
+        elem.items().get<std::string>("TYPE")->value("uint16");
+        elem.items().get<int>("VALUE")->value(350);
+        did.add(elem);
         // Add elements to the DID
         elem = tmpl.clone("ELEMENT");
-        elem->inside().get<std::string>("NAME")->set("Interface3");
-        elem->inside().get<std::string>("TYPE")->set("uint16");
-        did->add(elem);
+        elem.items().get<std::string>("NAME")->value("Interface3");
+        elem.items().get<std::string>("TYPE")->value("uint16");
+        did.add(elem);
         // Add the instance to the root group
         did_tree.add(did);
 
 
         // Modify instance2 of DID
         did = tmpl.clone("DID");
-        did->inside().get<std::string>("ID")->set("FD10");
-        did->inside().get<std::string>("TYPE")->set("EXTENDED");
+        if (did.items().exists("TEST")) {
+            did.items().get<std::string>("TEST")->value("Hello");
+        }
+        else {
+            did.items().add<std::string>("TEST")->value("Hello");
+        }
+        
+        did.items().get<std::string>("ID")->value("FD10");
+        did.items().get<std::string>("TYPE")->value("EXTENDED");
         // Add elements to the DID
         elem = tmpl.clone("ELEMENT");
-        elem->inside().get<std::string>("NAME")->set("Interface4");
-        elem->inside().get<std::string>("TYPE")->set("uint16");
-        elem->inside().get<int>("VALUE")->set(200);
-        did->add(elem);
+        elem.items().get<std::string>("NAME")->value("Interface4");
+        elem.items().get<std::string>("TYPE")->value("uint16");
+        elem.items().get<int>("VALUE")->value(200);
+        did.add(elem);
         // Add the instance to the root group
         did_tree.add(did);
 
 
         // Modify instance3 of DID
         did = tmpl.clone("DID");
-        did->inside().get<std::string>("ID")->set("FD11");
-        did->inside().get<std::string>("TYPE")->set("NORMAL");
+        did.items().get<std::string>("ID")->value("FD11");
+        did.items().get<std::string>("TYPE")->value("NORMAL");
         // Add the instance to the root group
         did_tree.add(did);
 
 
         // Print Tree
         print(did_tree);
+        std::cout<<"------------"<<std::endl;
+        if(did_tree.children()[1]->items().remove("TEST")) {
+            std::cout<<"Removed TEST"<<std::endl;
+        }
+        else {
+            std::cout<<"TEST not found"<<std::endl;
+        }
+        std::cout<<"------------"<<std::endl;
+        if(did_tree.children()[1]->items().remove("TEST")) {
+            std::cout<<"Removed TEST"<<std::endl;
+        }
+        else {
+            std::cout<<"TEST not found"<<std::endl;
+        }
+        std::cout<<"------------"<<std::endl;
+        print(did_tree);
+
     } catch (const std::exception& e) {
         std::cerr << "[Error] " << e.what() << std::endl;
     }

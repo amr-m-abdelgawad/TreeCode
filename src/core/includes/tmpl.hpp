@@ -13,7 +13,7 @@
  * Version 0.0.1
  * 
  * This project is a C++ library for managing hierarchical data
- * structures. It includes classes for containers, elements, groups, templates,
+ * structures. It includes classes for containers, items, groups, templates,
  * and logging. The library can be built as a shared library and includes options
  * for building tests and examples.
  * 
@@ -36,24 +36,36 @@
  * - Version 0.0.1:
  *      - Initial Implementation of the groupTemplate class
  */
-#ifndef TEMPLATE_H
-#define TEMPLATE_H
+#ifndef TMPL_H
+#define TMPL_H
 
 /**
  * @brief Include necessary headers
  */
 #include "group.hpp"
 
-namespace tc {
+namespace treecode {
     /**
-     * @brief The groupTemplate class represents a predefined structure of the tree.
+     * @class tmpl
+     * @brief A class representing a template that contains groups.
      * 
-     * This class is used to define a template for the structure of the tree,
-     * which can be used to create instances of the tree. The template is defined
-     * by a list of groups that define the structure of the tree.
+     * The tmpl class provides methods to manage and clone groups within a template.
+     * It allows adding groups, retrieving the name and groups, and cloning the template or specific groups.
      */
     class tmpl {
     public:
+        /**
+         * @brief Default constructor for the groupTemplate class.
+         */
+        tmpl() = default;
+
+
+        /**
+         * @brief Destructor for the groupTemplate class.
+         */
+        ~tmpl() = default;
+
+
         /**
          * @brief Constructor for the groupTemplate class.
          * @param name The name of the template.
@@ -63,66 +75,79 @@ namespace tc {
             const std::string& name
         );
 
+
+        /**
+         * @brief Method to add a group to the template.
+         * @param grp shared pointer to the group to add.
+         * Adds the specified group to the template.
+         */
+        void add(
+            const std::shared_ptr<group>& grp
+        );
+
+
         /**
          * @brief Method to add a group to the template.
          * @param group The group to add.
          * Adds the specified group to the template.
          */
         void add(
-            const std::shared_ptr<group>& group
+            const group& grp
         );
+
 
         /**
          * @brief Method to get the name of the template.
          * @return The name of the template.
          */
-        std::string getName() const;
+        std::string name() const;
+
 
         /**
          * @brief Method to get the groups in the template.
          * @return The groups in the template.
          */
-        const std::vector<std::shared_ptr<group>>& getGroups() const;
+        const std::vector<std::shared_ptr<group>>& groups() const;
+
 
         /**
          * @brief Method to create an instance of the template.
-         * @return An instance of the template.
+         * @return The created instance of the template.
          */
-        std::shared_ptr<group> clone() const;
+        group clone() const;
+
 
         /**
-         * @brief Method to create an instance of a group.
-         * @param groupName The name of the group.
-         * @return An instance of the group.
+         * @brief Method to create an instance of a specific group within the template.
+         * @param name The name of the group to create an instance of.
+         * @return The created instance of the group.
          */
-        std::shared_ptr<group> clone(
-            const std::string& groupName
+        group clone(
+            const std::string& name
         ) const;
 
     private:
         /**
-         * @var std::string groupTemplate::__name
+         * @var std::string tmpl::__name
          * The name of the template.
          */
         std::string __name;
 
-
         /**
-         * @var std::vector<std::shared_ptr<group>> groupTemplate::__groups
+         * @var std::vector<std::shared_ptr<group>> tmpl::__groups
          * The groups in the template.
          */
         std::vector<std::shared_ptr<group>> __groups;
 
-
         /**
-         * @brief Method to clone a group instance.
-         * @param groupIns The group instance to clone.
-         * @return The cloned group instance.
+         * @brief Clone the group.
+         * @param instance The instance to clone.
+         * @return A shared pointer to the cloned group.
          */
-        std::shared_ptr<group> __cloneGroupInstance(
-            const std::shared_ptr<group>& instance
+        group __clone_group(
+            const std::shared_ptr<group>& grp
         ) const;
     };
 } // namespace treecode
 
-#endif // TEMPLATE_H
+#endif // TMPL_H

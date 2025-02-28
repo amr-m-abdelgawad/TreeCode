@@ -43,9 +43,9 @@
  */
 #include "../core/includes/common.hpp"
 #include "../core/includes/container.hpp"
-#include "../core/includes/element.hpp"
+#include "../core/includes/item.hpp"
 #include "../core/includes/group.hpp"
-#include "../core/includes/template.hpp"
+#include "../core/includes/tmpl.hpp"
 #include "../core/includes/exception.hpp"
 #include "../core/includes/base.hpp"
 
