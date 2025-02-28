@@ -5,12 +5,14 @@
 ![GitHub License](https://img.shields.io/github/license/amr-m-abdelgawad/TreeCode)
 ![Static Badge](https://img.shields.io/badge/%40-Amr_MOUSA_2025-blue)
 
-TreeCode is a C++ library for managing hierarchical data structures. It includes classes for containers, elements, groups, templates.
+TreeCode is a C++ library for managing hierarchical data structures. It includes classes for containers, elements, groups, templates, and logging. The library can be built as a shared library and includes options for building tests and examples.
 
 ## Features
 - Efficient tree traversal algorithms
 - Tree manipulation functions
 - Support for different types of trees (binary, AVL, etc.)
+- Flexible template system for defining tree structures
+- Comprehensive logging support
 
 ## Installation
 To install the project, clone the repository and follow the build instructions:
@@ -24,25 +26,52 @@ cmake --build build --config Release
 ## Usage
 Here is an example of how to use the TreeCode library:
 ```cpp
-#include "core/includes/group.hpp"
-#include "core/includes/template.hpp"
+#include <treecode.hpp>
+
+tc::tmpl create_tmpl() {
+    auto tmpl = tc::tmpl("ExampleTemplate");
+
+    auto rootGroup = tc::group("Root");
+    rootGroup.inside().add<std::string>("name")->setReq();
+    tmpl.add(std::make_shared<tc::group>(rootGroup));
+
+    auto childGroup = tc::group("Child");
+    childGroup.inside().add<std::string>("name")->setReq();
+    tmpl.add(std::make_shared<tc::group>(childGroup));
+
+    return tmpl;
+}
 
 int main() {
-    TreeCode::groupTemplate treeTemplate("ExampleTemplate");
+    try {
+        auto tmpl = create_tmpl();
+        auto rootGroup = tc::group("RootGroup");
 
-    auto rootGroup = std::make_shared<TreeCode::group>("Root");
-    treeTemplate.addGroup(rootGroup);
+        auto instance = tmpl.clone("Root");
+        instance->inside().get<std::string>("name")->set("RootName");
+        rootGroup.add(instance);
 
-    auto childGroup = std::make_shared<TreeCode::group>("Child");
-    rootGroup->addChild(std::move(childGroup));
-
-    auto instance = treeTemplate.createInstance();
+        auto childInstance = tmpl.clone("Child");
+        childInstance->inside().get<std::string>("name")->set("ChildName");
+        instance->add(childInstance);
+    } catch (const std::exception& e) {
+        std::cerr << "[Error] " << e.what() << std::endl;
+    }
     return 0;
 }
 ```
 
+## Examples
+The repository includes several examples demonstrating how to use the TreeCode library. You can find them in the `examples` directory. To build and run the examples, use the following commands:
+```bash
+cmake -B build -DBUILD_EXAMPLES=ON
+cmake --build build --config Release
+./build/bin/ExampleExecutable
+```
+
 ## Contributing
-Contributions are welcome! Please fork the repository and submit a pull request.
+Contributions are welcome! Please fork the repository and submit a pull request. Make sure to follow the coding style and include tests for any new features or bug fixes.
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
