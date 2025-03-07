@@ -54,6 +54,11 @@ namespace treecode {
         
     public:
         /**
+         * @brief Default constructor for the base class.
+         */
+        base() = default;
+
+        /**
          * @brief Destructor for the base class.
          */
         virtual ~base() = default;
@@ -78,6 +83,19 @@ namespace treecode {
          * @return void
          */
         virtual void required() = 0;
+
+        protected:
+        /**
+         * @brief Copy constructor for the base class.
+         */
+        base(const base&) = default;
+
+
+        /**
+         * @brief Assignment operator for the base class.
+         * @return A reference to the assigned base object.
+         */
+        base& operator=(const base&) = default;
     };
 } // namespace treecode
 

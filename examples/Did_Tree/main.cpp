@@ -10,14 +10,14 @@ treecode::tmpl create_tmpl() {
     // Create DID group
     auto did_group = treecode::group("DID");
     did_group.items().add<std::string>("ID");
-    did_group.items().add<std::string>("TYPE",{"NORMAL","EXTENDED"});
+    did_group.items().add<std::string>("TYPE", {"NORMAL","EXTENDED"});
     
     // Create ELEMENT group
     auto ele_group = treecode::group("ELEMENT");
     ele_group.items().add<std::string>("NAME")->required();
     ele_group.items().add<std::string>("TYPE", {"uint8", "uint16"});
-    ele_group.items().add<int>("VALUE",0);
-    ele_group.items().add<bool>("SHARED",false)->required();
+    ele_group.items().add<int>("VALUE", 0);
+    ele_group.items().add<bool>("SHARED", false)->required();
 
 
     // Add DID & ELEMENT to the "DidTmpl" template
@@ -48,6 +48,7 @@ int main() {
         elem = tmpl.clone("ELEMENT");
         elem.items().get<std::string>("NAME")->value("Interface2");
         elem.items().get<std::string>("TYPE")->value("uint16");
+        elem.items().get<bool>("SHARED")->value(true);
         elem.items().get<int>("VALUE")->value(350);
         did.add(elem);
         // Add elements to the DID
@@ -91,11 +92,11 @@ int main() {
         // Print Tree
         print(did_tree);
         std::cout<<"------------"<<std::endl;
-        if(did_tree.children()[1]->items().remove("TEST")) {
-            std::cout<<"Removed TEST"<<std::endl;
+        if(did_tree.children()[1]->children()[0]->items().remove("TYPE")) {
+            std::cout<<"Removed TYPE"<<std::endl;
         }
         else {
-            std::cout<<"TEST not found"<<std::endl;
+            std::cout<<"TYPE not found"<<std::endl;
         }
         std::cout<<"------------"<<std::endl;
         if(did_tree.children()[1]->items().remove("TEST")) {

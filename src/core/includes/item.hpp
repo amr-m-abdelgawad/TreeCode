@@ -127,6 +127,20 @@ namespace treecode
          */
         std::shared_ptr<base> clone() const override;
 
+
+                /**
+         * @brief Checks if the value is set.
+         * @return True if the value is set, false otherwise.
+         */
+        bool is_value_set() const;
+
+
+        /**
+         * @brief Clears the value of the item.
+         * @return void
+         */
+        void clear_value();
+
     private:
         /**
          * @var std::optional<T> item::__value
@@ -265,6 +279,26 @@ namespace treecode
     template <typename T>
     std::shared_ptr<base> item<T>::clone() const {
         return std::make_shared<item<T>>(*this);
+    }
+
+
+        /**
+     * @brief Checks if the value is set.
+     * @return True if the value is set, false otherwise.
+     */
+    template <typename T>
+    bool item<T>::is_value_set() const {
+        return this->__value.has_value();
+    }
+
+
+    /**
+     * @brief Clears the value of the item.
+     * @return void
+     */
+    template <typename T>
+    void item<T>::clear_value() {
+        this->__value.reset();
     }
 } // namespace treecode
 
